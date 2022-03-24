@@ -1,0 +1,139 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 1000
+      author: Rob
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: users_pkey
+                  name: ID
+                  type: BIGINT
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+              - column:
+                  name: AGE
+                  type: SMALLINT
+              - column:
+                  name: EMAIL
+                  type: VARCHAR(255)
+            tableName: USERS
+
+  - changeSet:
+      id: 1001
+      author: Rob
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PROFILES_PKEY
+                  name: ID
+                  type: BIGINT
+              - column:
+                  name: CASH
+                  type: DECIMAL(12, 2)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: USER_ID
+                  type: BIGINT
+            tableName: PROFILES
+
+  - changeSet:
+      id: 1002
+      author: Rob
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PHONES_PKEY
+                  name: ID
+                  type: BIGINT
+              - column:
+                  name: VALUE
+                  type: VARCHAR(20)
+              - column:
+                  name: USER_ID
+                  type: BIGINT
+            tableName: PHONES
+
+  - changeSet:
+      id: 1466006862728-21
+      author: Rob
+      changes:
+        - addUniqueConstraint:
+            columnNames: VALUE
+            constraintName: UK1_PHONE_VALUE
+            tableName: PHONES
+            
+  - changeSet:
+      id: 1003
+      author: Rob
+      changes:
+        - addUniqueConstraint:
+            columnNames: EMAIL
+            constraintName: UK1_USER_EMAIL
+            tableName: USERS
+            
+  - changeSet:
+      id: 1004
+      author: Rob
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: USER_ID
+            indexName: IDX1_FK_PROF_USER_ID
+            tableName: PROFILES
+
+  - changeSet:
+      id: 1005
+      author: Rob
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: USER_ID
+            indexName: IDX1_FK_PHON_USER_ID
+            tableName: PHONES
+
+  - changeSet:
+      id: 1006
+      author: Rob
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: USER_ID
+            baseTableName: PROFILES
+            constraintName: FK1_CONST_USER_ID
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: ID
+            referencedTableName: USERS
+
+  - changeSet:
+      id: 1007
+      author: Rob
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: USER_ID
+            baseTableName: PHONES
+            constraintName: FK1_CONST_USER_ID
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: ID
+            referencedTableName: USERS
