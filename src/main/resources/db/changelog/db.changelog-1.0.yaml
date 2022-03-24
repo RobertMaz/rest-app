@@ -10,7 +10,7 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: users_pkey
+                    primaryKeyName: USERS_PKEY
                   name: ID
                   type: BIGINT
               - column:
@@ -69,25 +69,25 @@ databaseChangeLog:
             tableName: PHONES
 
   - changeSet:
-      id: 1466006862728-21
+      id: 1003
       author: Rob
       changes:
         - addUniqueConstraint:
             columnNames: VALUE
             constraintName: UK1_PHONE_VALUE
             tableName: PHONES
-            
+
   - changeSet:
-      id: 1003
+      id: 1004
       author: Rob
       changes:
         - addUniqueConstraint:
             columnNames: EMAIL
             constraintName: UK1_USER_EMAIL
             tableName: USERS
-            
+
   - changeSet:
-      id: 1004
+      id: 1005
       author: Rob
       changes:
         - createIndex:
@@ -98,7 +98,7 @@ databaseChangeLog:
             tableName: PROFILES
 
   - changeSet:
-      id: 1005
+      id: 1006
       author: Rob
       changes:
         - createIndex:
@@ -109,7 +109,7 @@ databaseChangeLog:
             tableName: PHONES
 
   - changeSet:
-      id: 1006
+      id: 1007
       author: Rob
       changes:
         - addForeignKeyConstraint:
@@ -124,7 +124,7 @@ databaseChangeLog:
             referencedTableName: USERS
 
   - changeSet:
-      id: 1007
+      id: 1008
       author: Rob
       changes:
         - addForeignKeyConstraint:
