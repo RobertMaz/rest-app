@@ -1,0 +1,72 @@
+package ru.demo.app.restapp.domain;
+
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.hibernate.Hibernate;
+
+@Getter
+@Setter
+@RequiredArgsConstructor
+@Accessors(chain = true)
+@Entity
+@Table(name = "USERS")
+public class User {
+
+  @Id
+  @Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(name = "NAME", nullable = false)
+  private String name;
+
+  @Column(name = "AGE")
+  private Integer age;
+
+  @Column(name = "EMAIL")
+  private String email;
+
+  @OneToMany(fetch = FetchType.EAGER, targetEntity = Phone.class, mappedBy = "user")
+  private List<Phone> phones;
+
+  @OneToMany(targetEntity = Profile.class, mappedBy = "user")
+  private List<Profile> profile;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+      return false;
+    }
+    User user = (User) o;
+    return id != null && Objects.equals(id, user.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName() + "(" +
+        "id = " + id + ", " +
+        "name = " + name + ", " +
+        "age = " + age + ", " +
+        "email = " + email + ")";
+  }
+}

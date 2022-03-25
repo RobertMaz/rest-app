@@ -16,6 +16,8 @@ databaseChangeLog:
               - column:
                   name: NAME
                   type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: AGE
                   type: SMALLINT
@@ -41,10 +43,10 @@ databaseChangeLog:
                   name: CASH
                   type: DECIMAL(12, 2)
               - column:
-                  constraints:
-                    nullable: false
                   name: USER_ID
                   type: BIGINT
+                  constraints:
+                    nullable: false
             tableName: PROFILES
 
   - changeSet:
@@ -66,6 +68,8 @@ databaseChangeLog:
               - column:
                   name: USER_ID
                   type: BIGINT
+                  constraints:
+                    nullable: false
             tableName: PHONES
 
   - changeSet:
