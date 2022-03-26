@@ -33,8 +33,7 @@ public class AuthenticationRestController {
 
   @PostMapping("login")
   public ResponseEntity<Map<Object, Object>> login(
-      @RequestBody
-          AuthenticationRequestDto requestDto) {
+      @RequestBody AuthenticationRequestDto requestDto) {
     try {
       log.debug("Trying to auth user {}", requestDto);
       String username = requestDto.getUsername();

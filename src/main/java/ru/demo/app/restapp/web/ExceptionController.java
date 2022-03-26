@@ -78,18 +78,19 @@ public class ExceptionController {
   }
 
   private String buildMessage(BindingResult bindingResult) {
-    return String.format("Error on %s, rejected errors [%s]",
-        bindingResult.getTarget(),
-        bindingResult.getAllErrors()
-                     .stream()
-                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                     .collect(joining(";")));
+    return String.format("Error on %s, rejected errors [%s]", bindingResult.getTarget(),
+        bindingResult
+            .getAllErrors()
+            .stream()
+            .map(DefaultMessageSourceResolvable::getDefaultMessage)
+            .collect(joining(";")));
   }
 
   private List<ErrorDescription> buildErrors(BindingResult bindingResult) {
-    return bindingResult.getFieldErrors()
-                        .stream()
-                        .map(e -> new ErrorDescription(e.getField(), e.getDefaultMessage()))
-                        .collect(toList());
+    return bindingResult
+        .getFieldErrors()
+        .stream()
+        .map(e -> new ErrorDescription(e.getField(), e.getDefaultMessage()))
+        .collect(toList());
   }
 }

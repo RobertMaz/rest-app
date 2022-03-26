@@ -47,12 +47,13 @@ public class JwtTokenProvider {
     Date now = new Date();
     Date valid = new Date(now.getTime() + validityInMilliseconds);
 
-    return Jwts.builder()
-               .setClaims(claims)
-               .setIssuedAt(now)
-               .setExpiration(valid)
-               .signWith(SignatureAlgorithm.HS256, secret)
-               .compact();
+    return Jwts
+        .builder()
+        .setClaims(claims)
+        .setIssuedAt(now)
+        .setExpiration(valid)
+        .signWith(SignatureAlgorithm.HS256, secret)
+        .compact();
   }
 
   public Authentication getAuthentication(String token) {

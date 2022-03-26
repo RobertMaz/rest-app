@@ -22,8 +22,7 @@ public class UserFullResponse {
     List<Phone> phones = user.getPhones();
     List<PhoneResponse> phonesResponse = null;
     if (phones != null) {
-      phonesResponse = phones.stream().map(PhoneResponse::from)
-                             .collect(Collectors.toList());
+      phonesResponse = phones.stream().map(PhoneResponse::from).collect(Collectors.toList());
     }
 
     return builder()

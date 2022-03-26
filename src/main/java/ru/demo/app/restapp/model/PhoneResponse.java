@@ -12,9 +12,6 @@ public class PhoneResponse {
   private String value;
 
   public static PhoneResponse from(Phone phone) {
-    return PhoneResponse.builder()
-                        .value(phone.getValue())
-                        .id(phone.getId())
-                        .build();
+    return PhoneResponse.builder().value(phone.getValue()).id(phone.getId()).build();
   }
 }

@@ -18,9 +18,6 @@ public class ProfileResponse {
     if (profile == null) {
       return null;
     }
-    return builder()
-        .id(profile.getId())
-        .cash(profile.getCash())
-        .build();
+    return builder().id(profile.getId()).cash(profile.getCash()).build();
   }
 }

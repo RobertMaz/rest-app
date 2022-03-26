@@ -10,8 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class ValidationErrorResponse
-    extends ErrorResponse {
+public class ValidationErrorResponse extends ErrorResponse {
 
   private final List<ErrorDescription> errors;
 
