@@ -17,6 +17,8 @@ public class ProfileServiceImpl implements ProfileService {
 
   private final ProfileRepository profileRepository;
   private final JdbcTemplate template;
+  private static final double UPDATE_PERCENTAGE = 1.1; // 110%
+  private static final double LIMIT_PERCENTAGE = 1.07; // 107%
 
   @Override
   @Nullable
@@ -39,7 +41,12 @@ public class ProfileServiceImpl implements ProfileService {
   @Override
   public void increaseCashOfAllProfiles() {
     int updated = template.update(
-        "update profiles p set cash = cash * 1.1 where cash * 1.1 < p.initial_value * 1.07");
-    log.info("Updated {} rows", updated);
+        "update profiles p set cash = cash * ? where cash * ? < p.initial_value * ?",
+        UPDATE_PERCENTAGE, UPDATE_PERCENTAGE, LIMIT_PERCENTAGE);
+    if (updated > 0) {
+      log.info("Updated {} rows", updated);
+    } else {
+      log.debug("No one rows was updated");
+    }
   }
 }

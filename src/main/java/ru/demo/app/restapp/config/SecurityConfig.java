@@ -27,10 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     //@formatter:off
     httpSecurity
-        .httpBasic().disable()
+          .httpBasic().disable()
           .csrf().disable()
-          .sessionManagement()
-          .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
           .authorizeRequests()
           .antMatchers(LOGIN_ENDPOINT).permitAll()

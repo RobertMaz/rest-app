@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.demo.app.restapp.domain.Phone;
@@ -19,6 +20,7 @@ import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.model.PhoneRequest;
 import ru.demo.app.restapp.repository.PhoneRepository;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PhoneServiceImpl implements PhoneService {
@@ -54,6 +56,7 @@ public class PhoneServiceImpl implements PhoneService {
         .filter(number -> !requestNumbers.contains(number))
         .map(number -> phonesMap.get(number).orElseThrow())
         .forEach(phoneRepository::delete);
+    log.info("Saved phones {}", phonesMap);
     return savedPhones;
   }
 

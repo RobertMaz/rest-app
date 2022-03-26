@@ -2,7 +2,6 @@ package ru.demo.app.restapp.security.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -61,10 +60,5 @@ public class JwtUser implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
-  }
-
-  @JsonIgnore
-  public Date getLastPasswordResetDate() {
-    return new Date();
   }
 }

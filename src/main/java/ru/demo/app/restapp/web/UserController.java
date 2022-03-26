@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +33,7 @@ import ru.demo.app.restapp.model.UserRequest;
 import ru.demo.app.restapp.model.ValidationErrorResponse;
 import ru.demo.app.restapp.service.UserService;
 
+@Slf4j
 @Tag(name = "User REST API operations")
 @RestController
 @RequestMapping("/api/v1/users")
@@ -50,6 +52,8 @@ public class UserController {
       @RequestParam(required = false, name = "email") Optional<String> email,
       @RequestParam(required = false, name = "page") Optional<Integer> page,
       @RequestParam(required = false, name = "size") Optional<Integer> size) {
+    log.info("FindAll users by age-{}, phone-{}, name-{}, email-{}, page-{}, size-{}", age, phone,
+        name, email, page, size);
     return userService.findAll(age, phone, name, email, page, size);
   }
 
@@ -58,6 +62,7 @@ public class UserController {
       @ApiResponse(responseCode = "404", description = "Requested data not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
   @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
   public UserFullResponse user(@PathVariable Long id) {
+    log.info("Find user by id-{}", id);
     return userService.getById(id);
   }
 
@@ -66,13 +71,14 @@ public class UserController {
       @ApiResponse(responseCode = "400", description = "Wrong request format", content = @Content(schema = @Schema(implementation = ValidationErrorResponse.class)))})
   @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> createUser(@Valid @RequestBody UserRequest request) {
+    log.info("Creating new user-{}", request);
     final Long id = userService.create(request);
+    log.debug("Created user by id-{}", id);
     final URI uri = ServletUriComponentsBuilder
         .fromCurrentRequest()
         .path("/{id}")
         .buildAndExpand(id)
         .toUri();
-
     return ResponseEntity.created(uri).build();
   }
 
@@ -83,6 +89,7 @@ public class UserController {
   @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
   public UserFullResponse updateUser(@PathVariable Long id,
       @Valid @RequestBody UserRequest request) {
+    log.info("Update user-{}", request);
     return userService.update(id, request);
   }
 
@@ -90,6 +97,7 @@ public class UserController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}")
   public void deleteUser(@PathVariable Long id) {
+    log.info("Delete user by id-{}", id);
     userService.delete(id);
   }
 }

@@ -41,7 +41,6 @@ spring:
       config-location:
         classpath: quartz.properties
 
-
 jwt:
   token:
     secret: jwtsecret
@@ -49,5 +48,5 @@ jwt:
 
 logging:
   level:
-    all: debug
+    root: debug
 

@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     Profile profile = profileService.save(request.getProfile(), user);
     user.setPhones(phones);
     user.setProfile(profile);
-    log.info("User created: {}", user);
+    log.debug("User created: {}", user);
     user = userRepository.save(user);
     return user.getId();
   }
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         () -> new EntityNotFoundException(Utility.getMessage("User by id {1} not found", id)));
     user = updateUser(request, user);
     user = userRepository.save(user);
-    log.info("User updated: {}", user);
+    log.debug("User updated: {}", user);
     return UserFullResponse.from(user);
   }
 
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public void delete(Long id) {
     userRepository.deleteById(id);
-    log.info("User deleted by id: {}", id);
+    log.debug("User deleted by id: {}", id);
   }
 
   @Override
@@ -110,18 +110,19 @@ public class UserServiceImpl implements UserService {
       Optional<Integer> size) {
     Specification<User> spec = Specification.where(null);
     if (age.isPresent() && age.get() > -1) {
-      log.info("Adding {} age to filter", age.get());
+      log.debug("Adding {} age to filter", age.get());
       spec = spec.and(Specifications.equalField("age", age.get()));
     }
     if (name.isPresent() && !name.get().isBlank()) {
-      log.info("Adding {} name to filter", name.get());
+      log.debug("Adding {} name to filter", name.get());
       spec = spec.and(Specifications.fieldLike("name", name.get()));
     }
     if (email.isPresent() && !email.get().isBlank()) {
-      log.info("Adding {} email to filter", email.get());
+      log.debug("Adding {} email to filter", email.get());
       spec = spec.and(Specifications.equalField("email", email.get()));
     }
     if (phone.isPresent() && !phone.get().isBlank()) {
+      log.debug("Adding {} phone to filter", phone.get());
       spec = spec.and(Specifications.whereChildFieldListContains("phones", "value", phone.get()));
     }
     PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(DEFAULT_PAGE_SIZE));
