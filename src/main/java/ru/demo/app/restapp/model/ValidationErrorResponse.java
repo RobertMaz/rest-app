@@ -11,11 +11,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class ValidationErrorResponse
-        extends ErrorResponse {
-    private final List<ErrorDescription> errors;
+    extends ErrorResponse {
 
-    public ValidationErrorResponse(String message, List<ErrorDescription> errors) {
-        super(message);
-        this.errors = errors;
-    }
+  private final List<ErrorDescription> errors;
+
+  public ValidationErrorResponse(String message, List<ErrorDescription> errors) {
+    super(message);
+    this.errors = errors;
+  }
 }

@@ -2,6 +2,7 @@ package ru.demo.app.restapp.domain;
 
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +40,11 @@ public class User {
   @Column(name = "EMAIL")
   private String email;
 
-  @OneToMany(fetch = FetchType.EAGER, targetEntity = Phone.class, mappedBy = "user")
+  @OneToMany(fetch = FetchType.EAGER, targetEntity = Phone.class, mappedBy = "user", cascade = CascadeType.REMOVE)
   private List<Phone> phones;
 
-  @OneToMany(targetEntity = Profile.class, mappedBy = "user")
-  private List<Profile> profile;
+  @OneToOne(targetEntity = Profile.class, mappedBy = "user", cascade = CascadeType.REMOVE)
+  private Profile profile;
 
   @Override
   public boolean equals(Object o) {
@@ -63,10 +65,7 @@ public class User {
 
   @Override
   public String toString() {
-    return getClass().getSimpleName() + "(" +
-        "id = " + id + ", " +
-        "name = " + name + ", " +
-        "age = " + age + ", " +
-        "email = " + email + ")";
+    return getClass().getSimpleName() + "(" + "id = " + id + ", " + "name = " + name + ", "
+        + "age = " + age + ", " + "email = " + email + ")";
   }
 }

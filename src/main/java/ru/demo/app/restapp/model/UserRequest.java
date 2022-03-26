@@ -20,7 +20,7 @@ public class UserRequest {
   @Max(value = 85, message = "{field.max.value}")
   private Integer age;
 
-  @NotEmpty(message = "{field.is.empty}")
   private ProfileRequest profile;
+
   private List<PhoneRequest> phones;
 }

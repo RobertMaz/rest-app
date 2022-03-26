@@ -41,7 +41,7 @@ databaseChangeLog:
                   type: BIGINT
               - column:
                   name: CASH
-                  type: DECIMAL(12, 2)
+                  type: DECIMAL(24, 2)
               - column:
                   name: USER_ID
                   type: BIGINT
