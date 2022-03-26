@@ -2,6 +2,7 @@ package ru.demo.app.restapp.domain;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,14 +17,18 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Getter
 @Setter
-@ToString
-@RequiredArgsConstructor
-@Accessors(chain = true)
 @Entity
+@ToString
+@Cacheable
 @Table(name = "PROFILES")
+@Accessors(chain = true)
+@RequiredArgsConstructor
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Profile {
 
   @Id
@@ -33,6 +38,9 @@ public class Profile {
 
   @Column(name = "CASH")
   private BigDecimal cash;
+
+  @Column(name = "INITIAL_VALUE", updatable = false)
+  private BigDecimal initialValue;
 
   @OneToOne
   @JoinColumn(name = "USER_ID")

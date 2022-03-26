@@ -2,6 +2,7 @@ package ru.demo.app.restapp.domain;
 
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,13 +18,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
-@Accessors(chain = true)
 @Entity
+@Cacheable
 @Table(name = "USERS")
+@Accessors(chain = true)
+@RequiredArgsConstructor
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
 
   @Id

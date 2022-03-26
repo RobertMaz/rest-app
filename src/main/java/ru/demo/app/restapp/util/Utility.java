@@ -1,4 +1,4 @@
-package ru.demo.app.restapp.config;
+package ru.demo.app.restapp.util;
 
 
 import java.util.List;

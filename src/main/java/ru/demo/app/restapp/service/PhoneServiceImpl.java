@@ -1,6 +1,6 @@
 package ru.demo.app.restapp.service;
 
-import static ru.demo.app.restapp.config.Utility.isEmpty;
+import static ru.demo.app.restapp.util.Utility.isEmpty;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,6 +32,7 @@ public class PhoneServiceImpl implements PhoneService {
     Map<String, Optional<Phone>> phonesMap = getUserPhonesMap(user);
     Set<String> requestNumbers = new HashSet<>();
     List<Phone> savedPhones = new LinkedList<>();
+
     if (!isEmpty(phonesRequest)) {
       for (PhoneRequest phone : phonesRequest) {
         requestNumbers.add(phone.getValue());
@@ -47,18 +48,21 @@ public class PhoneServiceImpl implements PhoneService {
         savedPhones.add(newPhone);
       }
     }
-    for (String number : phonesMap.keySet()) {
-      if (!requestNumbers.contains(number)) {
-        phoneRepository.delete(phonesMap.get(number).orElseThrow());
-      }
-    }
+    phonesMap
+        .keySet()
+        .stream()
+        .filter(number -> !requestNumbers.contains(number))
+        .map(number -> phonesMap.get(number).orElseThrow())
+        .forEach(phoneRepository::delete);
     return savedPhones;
   }
 
   @Nonnull
   private Map<String, Optional<Phone>> getUserPhonesMap(@Nonnull User user) {
-    return user.getPhones() != null ? user.getPhones().stream().collect(
-        Collectors.groupingBy(Phone::getValue, Collectors.<Phone>reducing((a, b) -> a)))
+    return user.getPhones() != null ? user
+        .getPhones()
+        .stream()
+        .collect(Collectors.groupingBy(Phone::getValue, Collectors.<Phone>reducing((a, b) -> a)))
         : Map.of();
   }
 }

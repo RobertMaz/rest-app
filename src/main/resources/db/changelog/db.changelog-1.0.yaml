@@ -43,6 +43,9 @@ databaseChangeLog:
                   name: CASH
                   type: DECIMAL(24, 2)
               - column:
+                  name: INITIAL_VALUE
+                  type: DECIMAL(24, 2)
+              - column:
                   name: USER_ID
                   type: BIGINT
                   constraints:

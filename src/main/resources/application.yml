@@ -4,3 +4,43 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
+
+  liquibase:
+    enabled: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        #optional - generate statistics to check if L2/query cache is actually being used.
+        generate_statistics: true
+        cache:
+          #required - turn on L2 cache.
+          use_second_level_cache: true
+          region:
+            #required - classpath to cache region factory.
+            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+      javax:
+        persistence:
+          sharedCache:
+            #required - enable selective caching mode - only entities with @Cacheable annotation will use L2 cache.
+            mode: ALL
+    hibernate:
+      ddl-auto: none
+      #optional - enable SQL statements formatting.
+      format_sql: true
+
+  quartz:
+    job-store-type: memory
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO
+      config-location:
+        classpath: quartz.properties
+
+logging:
+  level:
+    all: debug
