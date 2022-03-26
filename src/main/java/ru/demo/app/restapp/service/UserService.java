@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.springframework.stereotype.Service;
+import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.model.UserFullResponse;
 import ru.demo.app.restapp.model.UserRequest;
 
@@ -23,4 +24,6 @@ public interface UserService {
   List<UserFullResponse> findAll(Optional<Integer> age, Optional<String> phone,
       Optional<String> name, Optional<String> email, Optional<Integer> page,
       Optional<Integer> size);
+
+  Optional<User> findByName(String userName);
 }

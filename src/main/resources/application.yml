@@ -41,6 +41,13 @@ spring:
       config-location:
         classpath: quartz.properties
 
+
+jwt:
+  token:
+    secret: jwtsecret
+    expired: 600000
+
 logging:
   level:
     all: debug
+

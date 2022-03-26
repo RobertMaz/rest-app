@@ -11,7 +11,6 @@ import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,12 +124,16 @@ public class UserServiceImpl implements UserService {
     if (phone.isPresent() && !phone.get().isBlank()) {
       spec = spec.and(Specifications.whereChildFieldListContains("phones", "value", phone.get()));
     }
-    PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(DEFAULT_PAGE_SIZE),
-        Sort.DEFAULT_DIRECTION);
+    PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(DEFAULT_PAGE_SIZE));
     return userRepository
         .findAll(spec, pageRequest)
         .stream()
         .map(UserFullResponse::from)
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public Optional<User> findByName(String userName) {
+    return userRepository.findByName(userName);
   }
 }
