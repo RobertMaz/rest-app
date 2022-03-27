@@ -4,13 +4,18 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:8080
+tags:
+  - name: "users-api-controller"
+    description: "Everything about users"
+  - name: "auth-api-controller"
+    description: "authentication"
 paths:
   /users:
     get:
       summary: Get all users
       operationId: getUsers
       tags:
-        - user
+        - "users-api-controller"
       parameters:
         - in: query
           name: age
@@ -52,11 +57,40 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/UserFullResponse"
+  /users/{id}:
+    get:
+      summary: Get a user by id
+      operationId: getUserById
+      tags:
+        - "users-api-controller"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Numeric ID of the user to get
+      responses:
+        '200':
+          description: 'User for requested ID'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserFullResponse"
+        '404':
+          description: 'Requested data not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/v1/login:
     post:
       summary: Аутентификация пользователя
       operationId: auth
+      tags:
+        - "auth-api-controller"
       requestBody:
         content:
           application/json:

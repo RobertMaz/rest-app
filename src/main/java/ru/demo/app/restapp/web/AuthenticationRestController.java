@@ -12,6 +12,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,14 +21,15 @@ import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.security.jwt.JwtTokenProvider;
 import ru.demo.app.restapp.service.UserService;
 import ru.demo.app.restapp.web.controller.AuthApi;
+import ru.demo.app.restapp.web.controller.AuthApiDelegate;
 import ru.demo.app.restapp.web.dto.AccessDto;
 import ru.demo.app.restapp.web.dto.AuthenticationRequestDto;
 
 @Slf4j
-@RestController
-@RequestMapping(value = "/auth/v1")
+@Component
+//@RequestMapping(value = "/auth/v1")
 @RequiredArgsConstructor
-public class AuthenticationRestController implements AuthApi {
+public class AuthenticationRestController implements AuthApiDelegate {
 
   private final AuthenticationManager authenticationManager;
   private final JwtTokenProvider jwtTokenProvider;
@@ -39,10 +41,11 @@ public class AuthenticationRestController implements AuthApi {
    * @param requestDto (required)
    * @return Аутентификация выполнена успешно (status code 200)
    */
-  @PostMapping(value = "login")
+//  @PostMapping(value = "login")
   @Override
   public ResponseEntity<AccessDto> auth(
-      @ApiParam(value = "", required = true) @Valid @RequestBody AuthenticationRequestDto requestDto) {
+//      @ApiParam(value = "", required = true) @Valid @RequestBody
+          AuthenticationRequestDto requestDto) {
     try {
       log.info("Trying to auth user '{}'", requestDto.getUsername());
 

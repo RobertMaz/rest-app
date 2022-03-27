@@ -7,13 +7,13 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.5</version>
+    <version>2.3.1.RELEASE</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>ru.demo.app</groupId>
   <artifactId>rest-app</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>rest-app</name>
 
   <description>rest-app</description>
@@ -33,6 +33,7 @@
     <swagger-core-version>1.5.24</swagger-core-version>
     <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
     <validation-api.version>2.0.1.Final</validation-api.version>
+    <jackson-databind.version>2.11.0</jackson-databind.version>
   </properties>
 
 
@@ -127,30 +128,35 @@
 
     <!-- OpenApi -->
     <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-webmvc-core</artifactId>
-      <version>${open-api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-ui</artifactId>
-      <version>${open-api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
-      <version>${swagger-core-version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.openapitools</groupId>
       <artifactId>jackson-databind-nullable</artifactId>
-      <version>${jackson-databind-nullable.version}</version>
+      <version>0.2.2</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>javax.validation</groupId>-->
-<!--      <artifactId>validation-api</artifactId>-->
-<!--      <version>${validation-api.version}</version>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-boot-starter</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>31.0.1-jre</version>
+    </dependency>
+    <!--    <dependency>-->
+    <!--      <groupId>javax.validation</groupId>-->
+    <!--      <artifactId>validation-api</artifactId>-->
+    <!--      <version>${validation-api.version}</version>-->
+    <!--    </dependency>-->
     <!--    TODO check unused libraries-->
     <!-- End OpenApi -->
 
@@ -190,16 +196,16 @@
           <version>${openapi-generator-maven-plugin.version}</version>
           <configuration>
             <generatorName>spring</generatorName>
-            <generateApis>false</generateApis>
+            <generateApis>true</generateApis>
             <generateApiDocumentation>false</generateApiDocumentation>
             <generateApiTests>false</generateApiTests>
             <generateModels>false</generateModels>
             <generateModelDocumentation>false</generateModelDocumentation>
             <generateModelTests>false</generateModelTests>
-            <generateSupportingFiles>false</generateSupportingFiles>
+            <!--            <generateSupportingFiles>false</generateSupportingFiles>-->
             <configOptions>
               <delegatePattern>true</delegatePattern>
-<!--              <interfaceOnly>true</interfaceOnly>-->
+              <!--              <interfaceOnly>true</interfaceOnly>-->
               <java8>false</java8>
               <hideGenerationTimestamp>true</hideGenerationTimestamp>
               <useSwaggerAnnotations>false</useSwaggerAnnotations>
@@ -220,7 +226,6 @@
         <executions>
           <!-- App -->
           <execution>
-            <id>dm-oas</id>
             <goals>
               <goal>generate</goal>
             </goals>
@@ -229,14 +234,15 @@
                 ${project.basedir}/src/main/resources/openapi/dm.yml
               </inputSpec>
               <generatorName>spring</generatorName>
-              <generateApis>true</generateApis>
               <generateModels>true</generateModels>
+              <library>spring-boot</library>
               <apiPackage>ru.demo.app.restapp.web.controller</apiPackage>
               <modelPackage>ru.demo.app.restapp.web.dto</modelPackage>
+              <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
               <configOptions>
                 <useOptional>true</useOptional>
+                <delegatePattern>true</delegatePattern>
               </configOptions>
-
             </configuration>
           </execution>
         </executions>
