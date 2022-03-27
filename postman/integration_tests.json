@@ -33,7 +33,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"user\",\r\n    \"password\": \"password\"\r\n}",
+							"raw": "{\r\n    \"username\": \"user\",\r\n    \"password\": \"pwd\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -100,7 +100,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\",\r\n    \"age\": 21,\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"profile\": {\r\n        \"cash\": {{$randomInt}}\r\n    },\r\n    \"phones\": [\r\n        {\r\n            \"value\": \"{{$randomPhoneNumber}}\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\",\r\n    \"age\": 21,\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"username\": \"superuser\",\r\n    \"password\": \"pwd\",\r\n    \"profile\": {\r\n        \"cash\": {{$randomInt}}\r\n    },\r\n    \"phones\": [\r\n        {\r\n            \"value\": \"{{$randomPhoneNumber}}\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

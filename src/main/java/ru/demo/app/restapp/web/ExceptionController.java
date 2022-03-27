@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -58,6 +59,13 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(EntityNotFoundException.class)
   public ErrorResponse error(EntityNotFoundException exception) {
+    log.error("", exception);
+    return getErrorResponse(exception);
+  }
+
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  @ExceptionHandler(EmptyResultDataAccessException.class)
+  public ErrorResponse error(EmptyResultDataAccessException exception) {
     log.error("", exception);
     return getErrorResponse(exception);
   }

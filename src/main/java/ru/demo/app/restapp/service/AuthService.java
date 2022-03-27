@@ -2,6 +2,7 @@ package ru.demo.app.restapp.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import ru.demo.app.restapp.domain.Role;
 import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.security.jwt.JwtTokenProvider;
 import ru.demo.app.restapp.web.controller.AuthApiDelegate;
@@ -33,11 +35,12 @@ public class AuthService implements AuthApiDelegate {
 
       String username = requestDto.getUsername();
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-      Optional<User> user = userService.findByName(username);
+      Optional<User> user = userService.findByUserName(username);
       if (user.isEmpty()) {
         throw new UsernameNotFoundException("User with username: " + username + " not found");
       }
-      String token = jwtTokenProvider.createToken(username, List.of("user"));
+      List<String> roles = user.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+      String token = jwtTokenProvider.createToken(username, roles);
 
       AccessDto accessDto = new AccessDto();
       accessDto.setUsername(username);

@@ -42,7 +42,6 @@ spring:
             instanceId: AUTO
       config-location:
         classpath: quartz.properties
-
 jwt:
   token:
     secret: jwtsecret

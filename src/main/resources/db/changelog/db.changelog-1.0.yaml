@@ -24,6 +24,16 @@ databaseChangeLog:
               - column:
                   name: EMAIL
                   type: VARCHAR(255)
+              - column:
+                  name: USERNAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PASSWORD
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
             tableName: USERS
 
   - changeSet:
@@ -119,6 +129,15 @@ databaseChangeLog:
       id: 1007
       author: Rob
       changes:
+        - addUniqueConstraint:
+            columnNames: USERNAME
+            constraintName: UK1_USERNAME
+            tableName: USERS
+
+  - changeSet:
+      id: 1008
+      author: Rob
+      changes:
         - addForeignKeyConstraint:
             baseColumnNames: USER_ID
             baseTableName: PROFILES
@@ -131,7 +150,7 @@ databaseChangeLog:
             referencedTableName: USERS
 
   - changeSet:
-      id: 1008
+      id: 1009
       author: Rob
       changes:
         - addForeignKeyConstraint:

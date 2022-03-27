@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 
 @Configuration
-public class ApplicationConfiguration {
+public class QuartzConfiguration {
 
   private static final int TIME_INTERVAL_SECONDS = 20;
 

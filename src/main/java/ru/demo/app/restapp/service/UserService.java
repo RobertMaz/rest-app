@@ -25,5 +25,7 @@ public interface UserService extends UsersApiDelegate {
   ResponseEntity<List<UserFullResponse>> findAll(Integer age, String phone, String name, String email, Integer page,
       Integer size);
 
-  Optional<User> findByName(String userName);
+  Optional<User> findByName(String name);
+
+  Optional<User> findByUserName(String username);
 }

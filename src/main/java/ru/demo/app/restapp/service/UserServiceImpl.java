@@ -4,7 +4,6 @@ import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZ
 
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -15,13 +14,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.demo.app.restapp.domain.Phone;
 import ru.demo.app.restapp.domain.Profile;
+import ru.demo.app.restapp.domain.Role;
 import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.repository.UserRepository;
 import ru.demo.app.restapp.repository.specification.Specifications;
@@ -35,11 +39,12 @@ import ru.demo.app.restapp.web.dto.UserRequest;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
   private final UserRepository userRepository;
   private final PhoneService phoneService;
   private final ProfileService profileService;
+  private final PasswordEncoder passwordEncoder;
 
   /**
    * Получение информации о человеке. Если не найдено, отдавать 404:NotFound
@@ -62,16 +67,22 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public ResponseEntity<Void> createUser(@Nonnull UserRequest request) {
-    log.info("Creating new user-{}", request);
-    User user = updateUser(request, new User());
+    log.info("Creating new user by username-{}", request.getUsername());
+    User user = new User()
+        .setName(request.getName())
+        .setAge(request.getAge())
+        .setEmail(request.getEmail())
+        .setPassword(passwordEncoder.encode(request.getPassword()))
+        .setUsername(request.getUsername())
+        .setRoles(List.of(new Role().setName("user")));
+    user = userRepository.save(user);
     List<PhoneDto> phonesReq = request.getPhones();
     List<Phone> phones = phoneService.saveAll(phonesReq, user);
     Profile profile = profileService.save(request.getProfile(), user);
     user.setPhones(phones);
     user.setProfile(profile);
     user = userRepository.save(user);
-    log.debug("User created: {}", user);
-
+    log.debug("User created: {}", user.getUsername());
     final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
     return ResponseEntity.created(uri).build();
   }
@@ -95,8 +106,9 @@ public class UserServiceImpl implements UserService {
       username = principal.toString();
     }
     Optional<User> userOptional = userRepository.findByName(username);
+    String finalUsername = username;
     User user = userOptional.orElseThrow(
-        () -> new EntityNotFoundException(Utility.getMessage("User '{}' not found", username)));
+        () -> new EntityNotFoundException(Utility.getMessage("User '{}' not found", finalUsername)));
     Optional<User> userWithEmail = userRepository.findByEmail(request.getEmail());
     if (userWithEmail.isPresent()) {
       throw new IllegalArgumentException("Email already used by another user. Please enter correct password");
@@ -115,6 +127,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public ResponseEntity<Void> deleteUser(Long id) {
     log.info("Delete user by id-{}", id);
+
     userRepository.deleteById(id);
     log.debug("User deleted by id: {}", id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -156,16 +169,26 @@ public class UserServiceImpl implements UserService {
     return userRepository.findByName(userName);
   }
 
-  private User updateUser(UserRequest request, User oldUser) {
-    if (oldUser.getId() != null) {
-      if (!Objects.equals(request.getAge(), oldUser.getAge())) {
-        throw new IllegalArgumentException("Age mustn't change during update");
-      }
-      if (!Objects.equals(request.getName(), oldUser.getName())) {
-        throw new IllegalArgumentException("Name mustn't change during update");
-      }
+  @Override
+  public Optional<User> findByUserName(String username) {
+    log.info("Find user by username: {}", username);
+    return userRepository.findByUsername(username);
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    Optional<User> userOpt = userRepository.findByUsername(username);
+    if (userOpt.isEmpty()) {
+      log.error("User with username '{}' not found", username);
+      throw new UsernameNotFoundException("User with username: " + username + " not found");
     }
-    oldUser.setName(request.getName()).setAge(request.getAge()).setEmail(request.getEmail());
-    return userRepository.save(oldUser);
+    log.info("loadUserByUsername - user with username: {} successfully loaded", username);
+    User user = userOpt.get();
+    List<SimpleGrantedAuthority> authorities = user
+        .getRoles()
+        .stream()
+        .map(role -> new SimpleGrantedAuthority(role.getName()))
+        .collect(Collectors.toList());
+    return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
   }
 }

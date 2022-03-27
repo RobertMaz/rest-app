@@ -1,5 +1,7 @@
 package ru.demo.app.restapp.domain;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Cacheable;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -51,6 +54,15 @@ public class User {
   @OneToOne(targetEntity = Profile.class, mappedBy = "user", cascade = CascadeType.REMOVE)
   private Profile profile;
 
+  @Column(name = "USERNAME")
+  private String username;
+
+  @Column(name = "PASSWORD")
+  private String password;
+
+  @Transient
+  private Collection<Role> roles = new ArrayList<>();
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -70,7 +82,13 @@ public class User {
 
   @Override
   public String toString() {
-    return getClass().getSimpleName() + "(" + "id = " + id + ", " + "name = " + name + ", "
-        + "age = " + age + ", " + "email = " + email + ")";
+    return getClass().getSimpleName() + "(" +
+        "id = " + id + ", " +
+        "name = " + name + ", " +
+        "age = " + age + ", " +
+        "email = " + email + ", " +
+        "profile = " + profile + ", " +
+        "username = " + username + ", " +
+        "password = " + password + ")";
   }
 }

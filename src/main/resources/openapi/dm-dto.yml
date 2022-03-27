@@ -107,10 +107,12 @@ components:
 
     UserRequest:
       type: object
-      description: Запрос для создания пользователя
+      description: 'Request for create new user'
       required:
         - name
         - email
+        - username
+        - password
       properties:
         name:
           type: string
@@ -120,6 +122,10 @@ components:
           type: integer
           minimum: 12
           maximum: 85
+        username:
+          type: string
+        password:
+          type: string
         profile:
           $ref: "#/components/schemas/ProfileDto"
         phones:
