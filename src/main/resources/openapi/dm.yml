@@ -1,129 +1,199 @@
-openapi: "3.0.0"
+openapi: '3.0.0'
 info:
   title: Rest API Application
   version: 1.0.0
 servers:
   - url: http://localhost:8080
 tags:
-  - name: "users-api-controller"
-    description: "Everything about users"
-  - name: "auth-api-controller"
-    description: "authentication"
+  - name: 'users-api-controller'
+    description: 'Everything about users'
+  - name: 'auth-api-controller'
+    description: 'authentication'
+
 paths:
   /users:
     get:
-      summary: Get all users
-      operationId: getUsers
+      summary: 'Get all users'
+      operationId: findAll
       tags:
-        - "users-api-controller"
+        - 'users-api-controller'
       parameters:
         - in: query
           name: age
-          allowEmptyValue: false
+          allowEmptyValue: true
           schema:
             type: integer
-            description: Age of user
+            description: 'Age of user'
+            minimum: 0
         - in: query
           name: phone
           schema:
             type: string
-            description: Phone of user
+            description: 'Phone of user'
+            minLength: 5
         - in: query
           name: name
           schema:
             type: string
-            description: Name of user
+            description: 'Name of user'
+            minLength: 1
         - in: query
           name: email
           schema:
             type: string
-            description: Email of user
+            description: 'Email of user'
+            minLength: 5
         - in: query
           name: page
           schema:
             type: integer
-            description: Number of page
+            description: 'Number of page'
+            minimum: 0
         - in: query
           name: size
           schema:
             type: integer
-            description: Pages size
+            description: 'Pages size'
+            minimum: 0
       responses:
         '200':
-          description: Информации о клиенте найдена
+          description: 'Found users'
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserFullResponse"
+                  $ref: '#/components/schemas/UserFullResponse'
+    post:
+      summary: 'Create new user'
+      operationId: createUser
+      tags:
+        - 'users-api-controller'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      responses:
+        '201':
+          description: 'New user is created'
+        '400':
+          description: 'Wrong request format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+    patch:
+      summary: 'Update user email'
+      operationId: updateUserEmail
+      tags:
+        - 'users-api-controller'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeEmailRequest'
+        required: true
+      responses:
+        '200':
+          description: 'User email was updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserFullResponse'
+        '400':
+          description: 'Wrong request format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
   /users/{id}:
     get:
-      summary: Get a user by id
-      operationId: getUserById
+      summary: 'Get a user by id'
+      operationId: findById
       tags:
-        - "users-api-controller"
+        - 'users-api-controller'
       parameters:
         - in: path
           name: id
           schema:
             type: integer
             format: int64
+            minimum: 0
           required: true
-          description: Numeric ID of the user to get
+          description: 'Numeric ID of the user to get'
       responses:
         '200':
           description: 'User for requested ID'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserFullResponse"
+                $ref: '#/components/schemas/UserFullResponse'
         '404':
           description: 'Requested data not found'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: 'Delete user by id'
+      operationId: 'deleteUser'
+      tags:
+        - 'users-api-controller'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+          required: true
+          description: 'Numeric ID of the user to delete'
+      responses:
+        '204':
+          description: 'User for requested ID is removed'
 
   /auth/v1/login:
     post:
-      summary: Аутентификация пользователя
+      summary: 'User authentication'
       operationId: auth
       tags:
-        - "auth-api-controller"
+        - 'auth-api-controller'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AuthenticationRequestDto"
+              $ref: '#/components/schemas/AuthenticationRequestDto'
         required: true
       responses:
         '200':
-          description: Аутентификация выполнена успешно
+          description: 'User authentication successful'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AccessDto"
+                $ref: '#/components/schemas/AccessDto'
 
 components:
   schemas:
     UserRequest:
-      $ref: "./dm-dto.yml#/components/schemas/UserRequest"
+      $ref: './dm-dto.yml#/components/schemas/UserRequest'
     ValidationErrorResponse:
-      $ref: "./dm-dto.yml#/components/schemas/ValidationErrorResponse"
+      $ref: './dm-dto.yml#/components/schemas/ValidationErrorResponse'
     UserFullResponse:
-      $ref: "./dm-dto.yml#/components/schemas/UserFullResponse"
+      $ref: './dm-dto.yml#/components/schemas/UserFullResponse'
     ProfileDto:
-      $ref: "./dm-dto.yml#/components/schemas/ProfileDto"
+      $ref: './dm-dto.yml#/components/schemas/ProfileDto'
     PhoneDto:
-      $ref: "./dm-dto.yml#/components/schemas/PhoneDto"
+      $ref: './dm-dto.yml#/components/schemas/PhoneDto'
     ErrorResponse:
-      $ref: "./dm-dto.yml#/components/schemas/ErrorResponse"
+      $ref: './dm-dto.yml#/components/schemas/ErrorResponse'
     ErrorDescription:
-      $ref: "./dm-dto.yml#/components/schemas/ErrorDescription"
+      $ref: './dm-dto.yml#/components/schemas/ErrorDescription'
     AuthenticationRequestDto:
-      $ref: "./dm-dto.yml#/components/schemas/AuthenticationRequestDto"
+      $ref: './dm-dto.yml#/components/schemas/AuthenticationRequestDto'
     AccessDto:
-      $ref: "./dm-dto.yml#/components/schemas/AccessDto"
+      $ref: './dm-dto.yml#/components/schemas/AccessDto'
     ChangeEmailRequest:
-      $ref: "./dm-dto.yml#/components/schemas/ChangeEmailRequest"
+      $ref: './dm-dto.yml#/components/schemas/ChangeEmailRequest'

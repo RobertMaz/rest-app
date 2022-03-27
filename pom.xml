@@ -7,8 +7,8 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.3.1.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <version>2.5.5</version>
+    <relativePath/>
   </parent>
 
   <groupId>ru.demo.app</groupId>
@@ -20,20 +20,17 @@
 
   <properties>
     <java.version>11</java.version>
-    <spring-boot-admin.version>2.6.2</spring-boot-admin.version>
-    <open-api.version>1.6.6</open-api.version>
-    <jsr305.version>3.0.2</jsr305.version>
-    <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
-    <jjwt.version>0.9.1</jjwt.version>
-    <main.class>ru.demo.app.restapp.RestAppApplication</main.class>
-    <openapi-generator-maven-plugin.version>5.3.0</openapi-generator-maven-plugin.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+    <main.class>ru.demo.app.restapp.RestAppApplication</main.class>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <swagger-core-version>1.5.24</swagger-core-version>
+
+    <jjwt.version>0.9.1</jjwt.version>
+    <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
+    <jsr305.version>3.0.2</jsr305.version>
+    <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
     <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
-    <validation-api.version>2.0.1.Final</validation-api.version>
-    <jackson-databind.version>2.11.0</jackson-databind.version>
+    <openapi-generator-maven-plugin.version>5.3.0</openapi-generator-maven-plugin.version>
   </properties>
 
 
@@ -66,10 +63,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.codecentric</groupId>
-      <artifactId>spring-boot-admin-starter-server</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -130,34 +123,18 @@
     <dependency>
       <groupId>org.openapitools</groupId>
       <artifactId>jackson-databind-nullable</artifactId>
-      <version>0.2.2</version>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-      <version>3.0.0</version>
+      <version>${jackson-databind-nullable.version}</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger-ui</artifactId>
-      <version>3.0.0</version>
+      <version>${springfox-boot-starter.version}</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-boot-starter</artifactId>
-      <version>3.0.0</version>
+      <version>${springfox-boot-starter.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>31.0.1-jre</version>
-    </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>javax.validation</groupId>-->
-    <!--      <artifactId>validation-api</artifactId>-->
-    <!--      <version>${validation-api.version}</version>-->
-    <!--    </dependency>-->
-    <!--    TODO check unused libraries-->
     <!-- End OpenApi -->
 
     <!-- Test -->
@@ -174,51 +151,8 @@
     <!-- End Test -->
   </dependencies>
 
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>de.codecentric</groupId>
-        <artifactId>spring-boot-admin-dependencies</artifactId>
-        <version>${spring-boot-admin.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.openapitools</groupId>
-          <artifactId>openapi-generator-maven-plugin</artifactId>
-          <version>${openapi-generator-maven-plugin.version}</version>
-          <configuration>
-            <generatorName>spring</generatorName>
-            <generateApis>true</generateApis>
-            <generateApiDocumentation>false</generateApiDocumentation>
-            <generateApiTests>false</generateApiTests>
-            <generateModels>false</generateModels>
-            <generateModelDocumentation>false</generateModelDocumentation>
-            <generateModelTests>false</generateModelTests>
-            <!--            <generateSupportingFiles>false</generateSupportingFiles>-->
-            <configOptions>
-              <delegatePattern>true</delegatePattern>
-              <!--              <interfaceOnly>true</interfaceOnly>-->
-              <java8>false</java8>
-              <hideGenerationTimestamp>true</hideGenerationTimestamp>
-              <useSwaggerAnnotations>false</useSwaggerAnnotations>
-              <useBeanValidation>true</useBeanValidation>
-              <serializableModel>true</serializableModel>
-            </configOptions>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
     <plugins>
-
       <plugin>
         <groupId>org.openapitools</groupId>
         <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -234,13 +168,24 @@
                 ${project.basedir}/src/main/resources/openapi/dm.yml
               </inputSpec>
               <generatorName>spring</generatorName>
+              <generateApiDocumentation>false</generateApiDocumentation>
+              <generateApiTests>false</generateApiTests>
+              <generateModels>false</generateModels>
+              <generateModelDocumentation>false</generateModelDocumentation>
+              <generateModelTests>false</generateModelTests>
               <generateModels>true</generateModels>
+              <generateApis>true</generateApis>
               <library>spring-boot</library>
               <apiPackage>ru.demo.app.restapp.web.controller</apiPackage>
               <modelPackage>ru.demo.app.restapp.web.dto</modelPackage>
               <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
               <configOptions>
-                <useOptional>true</useOptional>
+                <delegatePattern>true</delegatePattern>
+                <java8>false</java8>
+                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                <useSwaggerAnnotations>false</useSwaggerAnnotations>
+                <useBeanValidation>true</useBeanValidation>
+                <serializableModel>true</serializableModel>
                 <delegatePattern>true</delegatePattern>
               </configOptions>
             </configuration>

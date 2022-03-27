@@ -17,12 +17,12 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.demo.app.restapp.web.dto.ErrorDescription;
 import ru.demo.app.restapp.web.dto.ErrorResponse;
@@ -30,7 +30,7 @@ import ru.demo.app.restapp.web.dto.ValidationErrorResponse;
 
 @Hidden
 @Slf4j
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice(annotations = Controller.class)
 public class ExceptionController {
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -76,7 +76,7 @@ public class ExceptionController {
     return getErrorResponse(exception);
   }
 
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(javax.validation.ConstraintViolationException.class)
   public ValidationErrorResponse conflict(javax.validation.ConstraintViolationException exception) {
     log.error("", exception);

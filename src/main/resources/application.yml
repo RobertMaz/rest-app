@@ -4,7 +4,9 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   liquibase:
     enabled: true
   jpa:
@@ -12,7 +14,7 @@ spring:
     properties:
       hibernate:
         #optional - generate statistics to check if L2/query cache is actually being used.
-        generate_statistics: true
+        generate_statistics: false
         cache:
           #required - turn on L2 cache.
           use_second_level_cache: true
