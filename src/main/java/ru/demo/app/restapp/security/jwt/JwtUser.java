@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class JwtUser implements UserDetails {
 
   private final Long id;
-  private final String email;
+  private final String username;
 
   @JsonIgnore
   public Long getId() {
@@ -37,9 +37,6 @@ public class JwtUser implements UserDetails {
     return true;
   }
 
-  public String getEmail() {
-    return email;
-  }
 
   @JsonIgnore
   @Override
@@ -49,7 +46,7 @@ public class JwtUser implements UserDetails {
 
   @Override
   public String getUsername() {
-    return getEmail();
+    return username;
   }
 
   @Override

@@ -10,4 +10,6 @@ import ru.demo.app.restapp.domain.User;
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
   Optional<User> findByName(String name);
+
+  Optional<User> findByEmail(String email);
 }

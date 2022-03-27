@@ -26,7 +26,7 @@ public class JwtUserDetailsService implements UserDetailsService {
       throw new UsernameNotFoundException("User with username: " + userName + " not found");
     }
     JwtUser jwtUser = JwtUserFactory.create(user.get());
-    log.info("IN loadUserByUsername - user with username: {} successfully loaded", userName);
+    log.info("loadUserByUsername - user with username: {} successfully loaded", userName);
     return jwtUser;
   }
 }

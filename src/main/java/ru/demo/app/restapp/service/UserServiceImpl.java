@@ -17,12 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.demo.app.restapp.domain.Phone;
 import ru.demo.app.restapp.domain.Profile;
 import ru.demo.app.restapp.domain.User;
-import ru.demo.app.restapp.model.PhoneRequest;
-import ru.demo.app.restapp.model.UserFullResponse;
-import ru.demo.app.restapp.model.UserRequest;
 import ru.demo.app.restapp.repository.UserRepository;
 import ru.demo.app.restapp.repository.specification.Specifications;
+import ru.demo.app.restapp.util.DtoUtil;
 import ru.demo.app.restapp.util.Utility;
+import ru.demo.app.restapp.web.dto.ChangeEmailRequest;
+import ru.demo.app.restapp.web.dto.PhoneDto;
+import ru.demo.app.restapp.web.dto.UserFullResponse;
+import ru.demo.app.restapp.web.dto.UserRequest;
 
 @Slf4j
 @Service
@@ -44,7 +46,7 @@ public class UserServiceImpl implements UserService {
     User user = userOpt.orElseThrow(
         () -> new EntityNotFoundException(Utility.getMessage("User by id {1} not found.", id)));
     log.info("User found: {}", user);
-    return UserFullResponse.from(user);
+    return DtoUtil.createUserFullResponse(user);
   }
 
   /**
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public Long create(@Nonnull UserRequest request) {
     User user = updateUser(request, new User());
-    List<PhoneRequest> phonesReq = request.getPhones();
+    List<PhoneDto> phonesReq = request.getPhones();
     List<Phone> phones = phoneService.saveAll(phonesReq, user);
     Profile profile = profileService.save(request.getProfile(), user);
     user.setPhones(phones);
@@ -80,18 +82,25 @@ public class UserServiceImpl implements UserService {
 
   /**
    * Обновление информации о человеке. Если не найдено, отдавать 404:NotFound
+   *
+   * @param id
+   * @param request
    */
   @Nonnull
   @Override
   @Transactional
-  public UserFullResponse update(Long id, @Nonnull UserRequest request) {
-    Optional<User> userOptional = userRepository.findById(id);
+  public UserFullResponse updateUserEmail(String username, @Nonnull ChangeEmailRequest request) {
+    Optional<User> userOptional = userRepository.findByName(username);
     User user = userOptional.orElseThrow(
-        () -> new EntityNotFoundException(Utility.getMessage("User by id {1} not found", id)));
-    user = updateUser(request, user);
+        () -> new EntityNotFoundException(Utility.getMessage("User '{}' not found", username)));
+    Optional<User> userWithEmail = userRepository.findByEmail(request.getEmail());
+    if (userWithEmail.isPresent()) {
+      throw new IllegalArgumentException("Email already used by another user. Please enter correct password");
+    }
+    user.setEmail(request.getEmail());
     user = userRepository.save(user);
     log.debug("User updated: {}", user);
-    return UserFullResponse.from(user);
+    return DtoUtil.createUserFullResponse(user);
   }
 
   /**
@@ -129,7 +138,7 @@ public class UserServiceImpl implements UserService {
     return userRepository
         .findAll(spec, pageRequest)
         .stream()
-        .map(UserFullResponse::from)
+        .map(DtoUtil::createUserFullResponse)
         .collect(Collectors.toList());
   }
 

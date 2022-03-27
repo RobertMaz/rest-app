@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.demo.app.restapp.domain.Phone;
 import ru.demo.app.restapp.domain.User;
-import ru.demo.app.restapp.model.PhoneRequest;
 import ru.demo.app.restapp.repository.PhoneRepository;
+import ru.demo.app.restapp.web.dto.PhoneDto;
 
 @Slf4j
 @Service
@@ -30,13 +30,13 @@ public class PhoneServiceImpl implements PhoneService {
   @Override
   @Nonnull
   @Transactional
-  public List<Phone> saveAll(@Nullable List<PhoneRequest> phonesRequest, User user) {
+  public List<Phone> saveAll(@Nullable List<PhoneDto> phoneDtos, User user) {
     Map<String, Optional<Phone>> phonesMap = getUserPhonesMap(user);
     Set<String> requestNumbers = new HashSet<>();
     List<Phone> savedPhones = new LinkedList<>();
 
-    if (!isEmpty(phonesRequest)) {
-      for (PhoneRequest phone : phonesRequest) {
+    if (!isEmpty(phoneDtos)) {
+      for (PhoneDto phone : phoneDtos) {
         requestNumbers.add(phone.getValue());
         Phone newPhone;
         if (!phonesMap.containsKey(phone.getValue())) {

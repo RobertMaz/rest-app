@@ -1,0 +1,137 @@
+openapi: "3.0.0"
+info:
+  title: Транспортные объекты сервисов
+  version: 1.0.0
+paths:
+  /dummy:
+    get:
+      responses:
+        '200':
+          description: Фиктивный
+components:
+  schemas:
+    AuthenticationRequestDto:
+      type: object
+      description: Запрос для аутентификации к сервису
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    AccessDto:
+      type: object
+      description: Токен для дальнейшей работы
+      required:
+        - username
+        - token
+      properties:
+        username:
+          type: string
+        token:
+          type: string
+
+    ErrorDescription:
+      type: object
+      description: Описание ошибки
+      properties:
+        field:
+          type: string
+        error:
+          type: string
+
+    ErrorResponse:
+      type: object
+      description: Ответ с ошибкой
+      properties:
+        message:
+          type: string
+
+    PhoneDto:
+      type: object
+      description: Номер телефона
+      required:
+        - value
+      properties:
+        value:
+          type: string
+          minLength: 1
+        id:
+          type: integer
+          format: int64
+
+    ProfileDto:
+      type: object
+      description: Профиль пользователя
+      required:
+        - cash
+      properties:
+        cash:
+          type: number
+        id:
+          type: integer
+          format: int64
+
+    UserFullResponse:
+      type: object
+      description: Полные данные о user
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        age:
+          type: integer
+        email:
+          type: string
+        phones:
+          type: array
+          items:
+            $ref: "#/components/schemas/PhoneDto"
+        profile:
+          $ref: "#/components/schemas/ProfileDto"
+
+    ValidationErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/ErrorResponse"
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: "#/components/schemas/ErrorDescription"
+
+    UserRequest:
+      type: object
+      description: Запрос для создания пользователя
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        age:
+          type: integer
+          minimum: 12
+          maximum: 85
+        profile:
+          $ref: "#/components/schemas/ProfileDto"
+        phones:
+          type: array
+          items:
+            $ref: "#/components/schemas/PhoneDto"
+
+    ChangeEmailRequest:
+      type: object
+      description: Запрос для смены email для пользователя
+      required:
+        - email
+      properties:
+        email:
+          type: string

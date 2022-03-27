@@ -11,6 +11,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
@@ -46,6 +48,7 @@ public class JwtTokenProvider {
 
     Date now = new Date();
     Date valid = new Date(now.getTime() + validityInMilliseconds);
+    log.info("Create token for: {}", username);
 
     return Jwts
         .builder()
@@ -74,10 +77,12 @@ public class JwtTokenProvider {
   }
 
   public boolean validateToken(String token) {
+    log.debug("Token validation {}", token);
     try {
       Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
       return !claims.getBody().getExpiration().before(new Date());
     } catch (JwtException | IllegalArgumentException e) {
+      log.debug("Token validation failed {}", token);
       return false;
     }
   }

@@ -1,0 +1,95 @@
+openapi: "3.0.0"
+info:
+  title: Rest API Application
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /users:
+    get:
+      summary: Get all users
+      operationId: getUsers
+      tags:
+        - user
+      parameters:
+        - in: query
+          name: age
+          allowEmptyValue: false
+          schema:
+            type: integer
+            description: Age of user
+        - in: query
+          name: phone
+          schema:
+            type: string
+            description: Phone of user
+        - in: query
+          name: name
+          schema:
+            type: string
+            description: Name of user
+        - in: query
+          name: email
+          schema:
+            type: string
+            description: Email of user
+        - in: query
+          name: page
+          schema:
+            type: integer
+            description: Number of page
+        - in: query
+          name: size
+          schema:
+            type: integer
+            description: Pages size
+      responses:
+        '200':
+          description: Информации о клиенте найдена
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserFullResponse"
+
+  /auth/v1/login:
+    post:
+      summary: Аутентификация пользователя
+      operationId: auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationRequestDto"
+        required: true
+      responses:
+        '200':
+          description: Аутентификация выполнена успешно
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessDto"
+
+components:
+  schemas:
+    UserRequest:
+      $ref: "./dm-dto.yml#/components/schemas/UserRequest"
+    ValidationErrorResponse:
+      $ref: "./dm-dto.yml#/components/schemas/ValidationErrorResponse"
+    UserFullResponse:
+      $ref: "./dm-dto.yml#/components/schemas/UserFullResponse"
+    ProfileDto:
+      $ref: "./dm-dto.yml#/components/schemas/ProfileDto"
+    PhoneDto:
+      $ref: "./dm-dto.yml#/components/schemas/PhoneDto"
+    ErrorResponse:
+      $ref: "./dm-dto.yml#/components/schemas/ErrorResponse"
+    ErrorDescription:
+      $ref: "./dm-dto.yml#/components/schemas/ErrorDescription"
+    AuthenticationRequestDto:
+      $ref: "./dm-dto.yml#/components/schemas/AuthenticationRequestDto"
+    AccessDto:
+      $ref: "./dm-dto.yml#/components/schemas/AccessDto"
+    ChangeEmailRequest:
+      $ref: "./dm-dto.yml#/components/schemas/ChangeEmailRequest"

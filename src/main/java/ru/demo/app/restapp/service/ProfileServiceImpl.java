@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.demo.app.restapp.domain.Profile;
 import ru.demo.app.restapp.domain.User;
-import ru.demo.app.restapp.model.ProfileRequest;
 import ru.demo.app.restapp.repository.ProfileRepository;
+import ru.demo.app.restapp.web.dto.ProfileDto;
 
 @Slf4j
 @Service
@@ -22,7 +22,7 @@ public class ProfileServiceImpl implements ProfileService {
 
   @Override
   @Nullable
-  public Profile save(@Nullable ProfileRequest profileRequest, User user) {
+  public Profile save(@Nullable ProfileDto profileRequest, User user) {
     Profile userProfile = user.getProfile();
     if (userProfile != null && profileRequest != null) {
       userProfile.setCash(profileRequest.getCash());

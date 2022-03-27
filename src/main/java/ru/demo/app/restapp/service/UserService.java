@@ -5,8 +5,9 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.springframework.stereotype.Service;
 import ru.demo.app.restapp.domain.User;
-import ru.demo.app.restapp.model.UserFullResponse;
-import ru.demo.app.restapp.model.UserRequest;
+import ru.demo.app.restapp.web.dto.ChangeEmailRequest;
+import ru.demo.app.restapp.web.dto.UserFullResponse;
+import ru.demo.app.restapp.web.dto.UserRequest;
 
 @Service
 public interface UserService {
@@ -17,7 +18,7 @@ public interface UserService {
   Long create(@Nonnull UserRequest request);
 
   @Nonnull
-  UserFullResponse update(Long id, @Nonnull UserRequest request);
+  UserFullResponse updateUserEmail(String username, @Nonnull ChangeEmailRequest request);
 
   void delete(Long id);
 

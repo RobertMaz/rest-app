@@ -14,7 +14,8 @@ import ru.demo.app.restapp.security.jwt.JwtTokenProvider;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
+  private static final String LOGIN_ENDPOINT = "/auth/v1/login";
+
   private final JwtTokenProvider jwtTokenProvider;
 
   @Bean
@@ -33,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
           .authorizeRequests()
           .antMatchers(LOGIN_ENDPOINT).permitAll()
+          .antMatchers("/swagger-ui.html").permitAll()
           .anyRequest().authenticated()
         .and()
           .apply(new JwtConfigurer(jwtTokenProvider));

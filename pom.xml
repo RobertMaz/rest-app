@@ -18,6 +18,24 @@
 
   <description>rest-app</description>
 
+  <properties>
+    <java.version>11</java.version>
+    <spring-boot-admin.version>2.6.2</spring-boot-admin.version>
+    <open-api.version>1.6.6</open-api.version>
+    <jsr305.version>3.0.2</jsr305.version>
+    <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
+    <jjwt.version>0.9.1</jjwt.version>
+    <main.class>ru.demo.app.restapp.RestAppApplication</main.class>
+    <openapi-generator-maven-plugin.version>5.3.0</openapi-generator-maven-plugin.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <swagger-core-version>1.5.24</swagger-core-version>
+    <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
+    <validation-api.version>2.0.1.Final</validation-api.version>
+  </properties>
+
+
   <dependencies>
     <!--    Spring -->
     <dependency>
@@ -90,7 +108,7 @@
       <artifactId>ehcache</artifactId>
       <groupId>org.ehcache</groupId>
       <scope>runtime</scope>
-      <version>3.6.3</version>
+      <version>3.10.0</version>
     </dependency>
     <!-- End second level cache-->
 
@@ -118,6 +136,22 @@
       <artifactId>springdoc-openapi-ui</artifactId>
       <version>${open-api.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>${swagger-core-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openapitools</groupId>
+      <artifactId>jackson-databind-nullable</artifactId>
+      <version>${jackson-databind-nullable.version}</version>
+    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>javax.validation</groupId>-->
+<!--      <artifactId>validation-api</artifactId>-->
+<!--      <version>${validation-api.version}</version>-->
+<!--    </dependency>-->
+    <!--    TODO check unused libraries-->
     <!-- End OpenApi -->
 
     <!-- Test -->
@@ -134,15 +168,6 @@
     <!-- End Test -->
   </dependencies>
 
-  <properties>
-    <java.version>11</java.version>
-    <spring-boot-admin.version>2.6.2</spring-boot-admin.version>
-    <open-api.version>1.6.6</open-api.version>
-    <jsr305.version>3.0.2</jsr305.version>
-    <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
-    <jjwt.version>0.9.1</jjwt.version>
-  </properties>
-
 
   <dependencyManagement>
     <dependencies>
@@ -157,11 +182,72 @@
   </dependencyManagement>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.openapitools</groupId>
+          <artifactId>openapi-generator-maven-plugin</artifactId>
+          <version>${openapi-generator-maven-plugin.version}</version>
+          <configuration>
+            <generatorName>spring</generatorName>
+            <generateApis>false</generateApis>
+            <generateApiDocumentation>false</generateApiDocumentation>
+            <generateApiTests>false</generateApiTests>
+            <generateModels>false</generateModels>
+            <generateModelDocumentation>false</generateModelDocumentation>
+            <generateModelTests>false</generateModelTests>
+            <generateSupportingFiles>false</generateSupportingFiles>
+            <configOptions>
+              <delegatePattern>true</delegatePattern>
+<!--              <interfaceOnly>true</interfaceOnly>-->
+              <java8>false</java8>
+              <hideGenerationTimestamp>true</hideGenerationTimestamp>
+              <useSwaggerAnnotations>false</useSwaggerAnnotations>
+              <useBeanValidation>true</useBeanValidation>
+              <serializableModel>true</serializableModel>
+            </configOptions>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
+
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>${openapi-generator-maven-plugin.version}</version>
+        <executions>
+          <!-- App -->
+          <execution>
+            <id>dm-oas</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>
+                ${project.basedir}/src/main/resources/openapi/dm.yml
+              </inputSpec>
+              <generatorName>spring</generatorName>
+              <generateApis>true</generateApis>
+              <generateModels>true</generateModels>
+              <apiPackage>ru.demo.app.restapp.web.controller</apiPackage>
+              <modelPackage>ru.demo.app.restapp.web.dto</modelPackage>
+              <configOptions>
+                <useOptional>true</useOptional>
+              </configOptions>
+
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
+          <mainClass>${main.class}</mainClass>
+          <executable>true</executable>
           <excludes>
             <exclude>
               <groupId>org.projectlombok</groupId>
