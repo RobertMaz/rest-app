@@ -175,10 +175,9 @@
                 ${project.basedir}/src/main/resources/openapi/dm.yml
               </inputSpec>
               <generatorName>spring</generatorName>
-              <generateApiDocumentation>false</generateApiDocumentation>
+              <generateApiDocumentation>true</generateApiDocumentation>
+              <generateModelDocumentation>true</generateModelDocumentation>
               <generateApiTests>false</generateApiTests>
-              <generateModels>false</generateModels>
-              <generateModelDocumentation>false</generateModelDocumentation>
               <generateModelTests>false</generateModelTests>
               <generateModels>true</generateModels>
               <generateApis>true</generateApis>
@@ -193,7 +192,6 @@
                 <useSwaggerAnnotations>false</useSwaggerAnnotations>
                 <useBeanValidation>true</useBeanValidation>
                 <serializableModel>true</serializableModel>
-                <delegatePattern>true</delegatePattern>
               </configOptions>
             </configuration>
           </execution>
