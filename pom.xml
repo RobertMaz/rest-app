@@ -31,6 +31,7 @@
     <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
     <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
     <openapi-generator-maven-plugin.version>5.3.0</openapi-generator-maven-plugin.version>
+    <java-jwt.version>3.18.1</java-jwt.version>
   </properties>
 
 
@@ -81,7 +82,7 @@
     <dependency>
       <groupId>com.auth0</groupId>
       <artifactId>java-jwt</artifactId>
-      <version>3.18.1</version>
+      <version>${java-jwt.version}</version>
     </dependency>
     <!-- End Security -->
     <!-- End Spring -->

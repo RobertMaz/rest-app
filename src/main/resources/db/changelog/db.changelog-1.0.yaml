@@ -129,13 +129,24 @@ databaseChangeLog:
       id: 1007
       author: Rob
       changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: USERNAME
+            indexName: IDX1_USERNAME_USERS
+            tableName: USERS
+
+  - changeSet:
+      id: 1008
+      author: Rob
+      changes:
         - addUniqueConstraint:
             columnNames: USERNAME
             constraintName: UK1_USERNAME
             tableName: USERS
 
   - changeSet:
-      id: 1008
+      id: 1009
       author: Rob
       changes:
         - addForeignKeyConstraint:
@@ -150,7 +161,7 @@ databaseChangeLog:
             referencedTableName: USERS
 
   - changeSet:
-      id: 1009
+      id: 1010
       author: Rob
       changes:
         - addForeignKeyConstraint:

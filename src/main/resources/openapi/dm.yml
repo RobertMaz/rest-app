@@ -9,12 +9,13 @@ tags:
     description: 'Everything about users'
   - name: 'auth-api-controller'
     description: 'authentication'
-
 paths:
   /users:
     get:
       summary: 'Get all users'
       operationId: findAll
+      security:
+        - bearerAuth: [ ]
       tags:
         - 'users-api-controller'
       parameters:
@@ -67,6 +68,8 @@ paths:
     post:
       summary: 'Create new user'
       operationId: createUser
+      security:
+        - bearerAuth: [ ]
       tags:
         - 'users-api-controller'
       requestBody:
@@ -87,6 +90,8 @@ paths:
     patch:
       summary: 'Update user email'
       operationId: updateUserEmail
+      security:
+        - bearerAuth: [ ]
       tags:
         - 'users-api-controller'
       requestBody:
@@ -113,6 +118,8 @@ paths:
     get:
       summary: 'Get a user by id'
       operationId: findById
+      security:
+        - bearerAuth: [ ]
       tags:
         - 'users-api-controller'
       parameters:
@@ -140,6 +147,8 @@ paths:
     delete:
       summary: 'Delete user by id'
       operationId: 'deleteUser'
+      security:
+        - bearerAuth: [ ]
       tags:
         - 'users-api-controller'
       parameters:
@@ -175,6 +184,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/AccessDto'
 
+  /auth/v1/register:
+    post:
+      summary: 'Creating new user'
+      operationId: registerNewUser
+      tags:
+        - 'auth-api-controller'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      responses:
+        '201':
+          description: 'New user is created'
+        '400':
+          description: 'Wrong request format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
 components:
   schemas:
     UserRequest:
@@ -197,3 +228,11 @@ components:
       $ref: './dm-dto.yml#/components/schemas/AccessDto'
     ChangeEmailRequest:
       $ref: './dm-dto.yml#/components/schemas/ChangeEmailRequest'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: [ ]

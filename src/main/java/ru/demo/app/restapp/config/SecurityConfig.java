@@ -19,10 +19,17 @@ import ru.demo.app.restapp.security.jwt.JwtTokenProvider;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private static final String LOGIN_ENDPOINT = "/auth/v1/login";
   private final JwtTokenProvider jwtTokenProvider;
   private final UserDetailsService userDetailsService;
   private final PasswordEncoder encoder;
+  private static final String[] AUTH_WHITELIST = {
+      // -- Swagger UI v2
+      "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui", "/configuration/security",
+      "/swagger-ui.html", "/webjars/**",
+      // -- Swagger UI v3 (OpenAPI)
+      "/v3/api-docs/**", "/swagger-ui/**", "/auth/v1/login", "/auth/v1/register"
+      // other public endpoints of your API may be appended to this array
+  };
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -38,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
           .authorizeRequests()
-          .antMatchers(LOGIN_ENDPOINT).permitAll()
+          .antMatchers(AUTH_WHITELIST).permitAll()
           .anyRequest().authenticated()
         .and()
           .apply(new JwtConfigurer(jwtTokenProvider));

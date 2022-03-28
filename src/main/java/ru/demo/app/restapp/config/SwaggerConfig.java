@@ -21,7 +21,7 @@ public class SwaggerConfig {
 
   @Bean
   public Docket api() {
-    return new Docket(DocumentationType.SWAGGER_2)
+    return new Docket(DocumentationType.OAS_30)
         .apiInfo(apiInfo())
         .securityContexts(Arrays.asList(securityContext()))
         .securitySchemes(Arrays.asList(apiKey()))
@@ -32,14 +32,8 @@ public class SwaggerConfig {
   }
 
   private ApiInfo apiInfo() {
-    return new ApiInfo(
-        "My REST API",
-        "Some custom description of API.",
-        "1.0",
-        "Terms of service",
-        new Contact("Sallo Szrajbman", "www.baeldung.com", "salloszraj@gmail.com"),
-        "License of API",
-        "API license URL",
+    return new ApiInfo("My REST API", "Description of API.", "1.0", "Terms of service",
+        new Contact("Name", "localhost:8008", "email@gmail.com"), "License of API", "API license URL",
         Collections.emptyList());
   }
 

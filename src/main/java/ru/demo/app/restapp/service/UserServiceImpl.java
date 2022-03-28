@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     } else {
       username = principal.toString();
     }
-    Optional<User> userOptional = userRepository.findByName(username);
+    Optional<User> userOptional = userRepository.findByUsername(username);
     String finalUsername = username;
     User user = userOptional.orElseThrow(
         () -> new EntityNotFoundException(Utility.getMessage("User '{}' not found", finalUsername)));

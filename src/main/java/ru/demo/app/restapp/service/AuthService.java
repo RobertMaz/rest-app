@@ -18,6 +18,7 @@ import ru.demo.app.restapp.security.jwt.JwtTokenProvider;
 import ru.demo.app.restapp.web.controller.AuthApiDelegate;
 import ru.demo.app.restapp.web.dto.AccessDto;
 import ru.demo.app.restapp.web.dto.AuthenticationRequestDto;
+import ru.demo.app.restapp.web.dto.UserRequest;
 
 @Slf4j
 @Component
@@ -50,5 +51,11 @@ public class AuthService implements AuthApiDelegate {
     } catch (AuthenticationException e) {
       throw new BadCredentialsException("Invalid username or password");
     }
+  }
+
+  @Override
+  public ResponseEntity<Void> registerNewUser(UserRequest userRequest) {
+    log.info("Trying to register user: '{}'", userRequest.getUsername());
+    return userService.createUser(userRequest);
   }
 }

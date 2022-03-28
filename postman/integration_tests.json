@@ -9,6 +9,52 @@
 			"name": "Users",
 			"item": [
 				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Sign up', () => {\r",
+									"    pm.response.to.have.status(201)\r",
+									"\r",
+									"    const request = JSON.parse(pm.request.body)\r",
+									"    pm.expect(request).to.not.empty;\r",
+									"    pm.globals.set(\"registeredUser\", request.username)\r",
+									"    pm.globals.set(\"userPassword\", request.password)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\",\r\n    \"age\": \"25\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{$randomPassword}}\",\r\n    \"profile\": {\r\n        \"cash\": {{$randomInt}}\r\n    },\r\n    \"phones\": [\r\n        {\r\n            \"value\": \"{{$randomPhoneNumber}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/v1/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"v1",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Authorize",
 					"event": [
 						{
@@ -33,7 +79,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"user\",\r\n    \"password\": \"pwd\"\r\n}",
+							"raw": "{\r\n    \"username\": \"{{registeredUser}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -100,7 +146,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\",\r\n    \"age\": 21,\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"username\": \"superuser\",\r\n    \"password\": \"pwd\",\r\n    \"profile\": {\r\n        \"cash\": {{$randomInt}}\r\n    },\r\n    \"phones\": [\r\n        {\r\n            \"value\": \"{{$randomPhoneNumber}}\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\",\r\n    \"age\": 21,\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"password\": \"{{$randomPassword}}\",\r\n    \"profile\": {\r\n        \"cash\": {{$randomInt}}\r\n    },\r\n    \"phones\": [\r\n        {\r\n            \"value\": \"{{$randomPhoneNumber}}\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -228,7 +274,7 @@
 					"response": []
 				},
 				{
-					"name": "[Remove Person from Department] /api/v1/departments/:departmentId/:personId Copy",
+					"name": "Remove user",
 					"event": [
 						{
 							"listen": "test",
