@@ -18,3 +18,5 @@ default, uses username and password postgres, postgres.
 - Uses JWT bearer token for auth
 - Uses liquibase for DB migrations
 - Uses validation in requests
+
+### For starting this application you have to generate openapi code, by maven compile. And then you can start the application.

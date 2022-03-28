@@ -29,6 +29,7 @@ public class DtoUtil {
         .name(user.getName())
         .age(user.getAge())
         .email(user.getEmail())
+        .username(user.getUsername())
         .phones(phonesResponse)
         .profile(createProfileDto(user.getProfile()));
   }

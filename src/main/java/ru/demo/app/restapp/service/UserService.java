@@ -3,6 +3,7 @@ package ru.demo.app.restapp.service;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.springframework.http.ResponseEntity;
 import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.web.controller.UsersApiDelegate;
@@ -20,10 +21,10 @@ public interface UserService extends UsersApiDelegate {
   @Nonnull
   ResponseEntity<UserFullResponse> updateUserEmail(@Nonnull ChangeEmailRequest request);
 
-  ResponseEntity<Void> deleteUser(Long id);
+  ResponseEntity<Void> deleteUser(@Nullable Long id);
 
-  ResponseEntity<List<UserFullResponse>> findAll(Integer age, String phone, String name, String email, Integer page,
-      Integer size);
+  ResponseEntity<List<UserFullResponse>> findAll(@Nullable Integer age, @Nullable String phone, @Nullable String name,
+      @Nullable String email, @Nullable Integer page, @Nullable Integer size);
 
   Optional<User> findByName(String name);
 

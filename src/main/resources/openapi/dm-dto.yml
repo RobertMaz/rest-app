@@ -1,18 +1,18 @@
 openapi: "3.0.0"
 info:
-  title: Транспортные объекты сервисов
+  title: 'DTOs'
   version: 1.0.0
 paths:
   /dummy:
     get:
       responses:
         '200':
-          description: Фиктивный
+          description: 'Dummy'
 components:
   schemas:
     AuthenticationRequestDto:
       type: object
-      description: Запрос для аутентификации к сервису
+      description: 'Request for user auth'
       required:
         - username
         - password
@@ -24,7 +24,7 @@ components:
 
     AccessDto:
       type: object
-      description: Токен для дальнейшей работы
+      description: 'Bearer token for work'
       required:
         - username
         - token
@@ -36,7 +36,7 @@ components:
 
     ErrorDescription:
       type: object
-      description: Описание ошибки
+      description: 'Error description'
       properties:
         field:
           type: string
@@ -45,14 +45,14 @@ components:
 
     ErrorResponse:
       type: object
-      description: Ответ с ошибкой
+      description: 'Error response'
       properties:
         message:
           type: string
 
     PhoneDto:
       type: object
-      description: Номер телефона
+      description: 'Phone number'
       required:
         - value
       properties:
@@ -65,7 +65,7 @@ components:
 
     ProfileDto:
       type: object
-      description: Профиль пользователя
+      description: 'User profile'
       required:
         - cash
       properties:
@@ -77,7 +77,7 @@ components:
 
     UserFullResponse:
       type: object
-      description: Полные данные о user
+      description: 'Full user details'
       properties:
         id:
           type: integer
@@ -87,6 +87,8 @@ components:
         age:
           type: integer
         email:
+          type: string
+        username:
           type: string
         phones:
           type: array
@@ -135,7 +137,7 @@ components:
 
     ChangeEmailRequest:
       type: object
-      description: Запрос для смены email для пользователя
+      description: 'Request for change user email'
       required:
         - email
       properties:
