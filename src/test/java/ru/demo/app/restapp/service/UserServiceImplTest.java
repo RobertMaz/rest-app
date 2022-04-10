@@ -40,6 +40,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.repository.UserRepository;
 import ru.demo.app.restapp.util.UsersUtil;
+import ru.demo.app.restapp.util.mapper.PhoneMapper;
+import ru.demo.app.restapp.util.mapper.UserMapper;
 import ru.demo.app.restapp.web.dto.ChangeEmailRequest;
 import ru.demo.app.restapp.web.dto.UserFullResponse;
 import ru.demo.app.restapp.web.dto.UserRequest;
@@ -56,6 +58,10 @@ class UserServiceImplTest {
   private PhoneService phoneService;
   @MockBean
   private ProfileService profileService;
+  @MockBean
+  private UserMapper userMapper;
+  @MockBean
+  private PhoneMapper phoneMapper;
   private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
   private static final Random random = new Random();
@@ -68,8 +74,7 @@ class UserServiceImplTest {
   @Test
   void findById() {
     Long anyId = anyLong();
-    when(userRepository.findById(anyId))
-        .thenReturn(Optional.of(buildUser(anyId)));
+    when(userRepository.findById(anyId)).thenReturn(Optional.of(buildUser(anyId)));
 
     ResponseEntity<UserFullResponse> user = userService.findById(anyId);
     assertNotNull(user.getBody());
@@ -90,9 +95,7 @@ class UserServiceImplTest {
     userReq.setEmail("email");
     userReq.setName("name");
 
-    doReturn(userReq)
-        .when(userRepository)
-        .save(any(User.class));
+    doReturn(userReq).when(userRepository).save(any(User.class));
 
     UserRequest request = new UserRequest();
     request.setEmail("email");
@@ -101,12 +104,9 @@ class UserServiceImplTest {
 
     ResponseEntity<Void> created = userService.createUser(request);
     //
-    verify(phoneService, times(1))
-        .saveAll(any(), eq(userReq));
-    verify(profileService, times(1))
-        .save(any(), eq(userReq));
-    verify(userRepository, times(1))
-        .save(userReq);
+    verify(phoneService, times(1)).saveAll(any(), eq(userReq));
+    verify(profileService, times(1)).save(any(), eq(userReq));
+    verify(userRepository, times(1)).save(userReq);
     //
     URI location = created.getHeaders().getLocation();
     assertNotNull(location);
@@ -120,17 +120,11 @@ class UserServiceImplTest {
     SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, "password"));
     Long anyId = (long) random.nextInt(100);
     String email = "emailNew@email.com";
-    User user = new User()
-        .setEmail("oldEmail@email.com")
-        .setName(username)
-        .setId(anyId);
+    User user = new User().setEmail("oldEmail@email.com").setName(username).setId(anyId);
 
-    when(userRepository.findByUsername(username))
-        .thenReturn(Optional.of(user));
+    when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
-    doReturn(user.setEmail(email))
-        .when(userRepository)
-        .save(user);
+    doReturn(user.setEmail(email)).when(userRepository).save(user);
 
     ChangeEmailRequest request = new ChangeEmailRequest();
     request.setEmail(email);
@@ -142,8 +136,7 @@ class UserServiceImplTest {
     assertEquals(email, userResponse.getEmail());
     assertEquals(anyId, userResponse.getId());
     assertEquals(user.getName(), userResponse.getName());
-    verify(userRepository, times(1))
-        .save(ArgumentMatchers.any(User.class));
+    verify(userRepository, times(1)).save(ArgumentMatchers.any(User.class));
   }
 
   @Test
@@ -158,24 +151,19 @@ class UserServiceImplTest {
   void deleteUser() {
     Long anyId = (long) random.nextInt(100);
     userService.deleteUser(anyId);
-    verify(userRepository, times(1))
-        .deleteById(anyId);
+    verify(userRepository, times(1)).deleteById(anyId);
     assertThrows(RuntimeException.class, () -> userService.findById(0L));
   }
 
   @Test
   void findAll() {
-    List<User> users = LongStream.range(0, COUNT)
-                                 .mapToObj(UsersUtil::buildUser)
-                                 .collect(Collectors.toList());
+    List<User> users = LongStream.range(0, COUNT).mapToObj(UsersUtil::buildUser).collect(Collectors.toList());
 
     Page<User> usersPage = new PageImpl<>(users);
 
-    when(userRepository.findAll(any(Specification.class), any(PageRequest.class)))
-        .thenReturn(usersPage);
+    when(userRepository.findAll(any(Specification.class), any(PageRequest.class))).thenReturn(usersPage);
 
-    ResponseEntity<List<UserFullResponse>> foundPeople = userService
-        .findAll(null, null, null, null, null, null);
+    ResponseEntity<List<UserFullResponse>> foundPeople = userService.findAll(null, null, null, null, null, null);
     assertNotNull(foundPeople.getBody());
     assertEquals(COUNT, foundPeople.getBody().size());
 
@@ -188,8 +176,7 @@ class UserServiceImplTest {
   @Test
   void findByName() {
     String name = anyString();
-    when(userRepository.findByName(name))
-        .thenReturn(Optional.of(buildUser(name)));
+    when(userRepository.findByName(name)).thenReturn(Optional.of(buildUser(name)));
 
     Optional<User> user = userService.findByName(name);
     assertTrue(user.isPresent());
@@ -200,8 +187,7 @@ class UserServiceImplTest {
   @Test
   void findByUserName() {
     String name = anyString();
-    when(userRepository.findByUsername(name))
-        .thenReturn(Optional.of(buildUser(name)));
+    when(userRepository.findByUsername(name)).thenReturn(Optional.of(buildUser(name)));
 
     Optional<User> user = userService.findByUserName(name);
     assertTrue(user.isPresent());
@@ -212,8 +198,7 @@ class UserServiceImplTest {
   @Test
   void loadUserByUsername() {
     String name = "anyName";
-    when(userRepository.findByUsername(name))
-        .thenReturn(Optional.of(buildUser(name)));
+    when(userRepository.findByUsername(name)).thenReturn(Optional.of(buildUser(name)));
 
     if (userService instanceof UserDetailsService) {
       UserDetails userDetails = ((UserDetailsService) userService).loadUserByUsername(name);

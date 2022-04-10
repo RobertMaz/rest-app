@@ -29,8 +29,8 @@ import ru.demo.app.restapp.domain.Role;
 import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.repository.UserRepository;
 import ru.demo.app.restapp.repository.specification.Specifications;
-import ru.demo.app.restapp.util.DtoUtil;
 import ru.demo.app.restapp.util.Utility;
+import ru.demo.app.restapp.util.mapper.UserMapper;
 import ru.demo.app.restapp.web.dto.ChangeEmailRequest;
 import ru.demo.app.restapp.web.dto.PhoneDto;
 import ru.demo.app.restapp.web.dto.UserFullResponse;
@@ -40,6 +40,8 @@ import ru.demo.app.restapp.web.dto.UserRequest;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
+
+  private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
   private final UserRepository userRepository;
   private final PhoneService phoneService;
@@ -56,7 +58,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     Optional<User> userOpt = userRepository.findById(id);
     log.info("Find user by id-{}", id);
     UserFullResponse user = userOpt
-        .map(DtoUtil::createUserFullResponse)
+        .map(USER_MAPPER::userToFullUserResponse)
         .orElseThrow(() -> new EntityNotFoundException(Utility.getMessage("User by id {1} not found.", id)));
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
@@ -116,7 +118,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     user.setEmail(request.getEmail());
     user = userRepository.save(user);
     log.debug("User updated: {}", user);
-    UserFullResponse response = DtoUtil.createUserFullResponse(user);
+    UserFullResponse response = USER_MAPPER.userToFullUserResponse(user);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
@@ -137,7 +139,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   public ResponseEntity<List<UserFullResponse>> findAll(Integer age, String phone, String name, String email,
       Integer page, Integer size) {
     log.info("FindAll users by age-{}, phone-{}, name-{}, email-{}, page-{}, size-{}", age, phone, name, email, page,
-        size);
+             size);
     Specification<User> spec = Specification.where(null);
     if (age != null) {
       log.debug("Adding {} age to filter", age);
@@ -159,7 +161,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     List<UserFullResponse> foundUsers = userRepository
         .findAll(spec, pageRequest)
         .stream()
-        .map(DtoUtil::createUserFullResponse)
+        .map(USER_MAPPER::userToFullUserResponse)
         .collect(Collectors.toList());
     log.debug("Found users: {}", foundUsers);
     return new ResponseEntity<>(foundUsers, HttpStatus.OK);

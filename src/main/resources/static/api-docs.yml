@@ -208,26 +208,140 @@ paths:
 
 components:
   schemas:
-    UserRequest:
-      $ref: './dm-dto.yml#/components/schemas/UserRequest'
-    ValidationErrorResponse:
-      $ref: './dm-dto.yml#/components/schemas/ValidationErrorResponse'
-    UserFullResponse:
-      $ref: './dm-dto.yml#/components/schemas/UserFullResponse'
-    ProfileDto:
-      $ref: './dm-dto.yml#/components/schemas/ProfileDto'
-    PhoneDto:
-      $ref: './dm-dto.yml#/components/schemas/PhoneDto'
-    ErrorResponse:
-      $ref: './dm-dto.yml#/components/schemas/ErrorResponse'
-    ErrorDescription:
-      $ref: './dm-dto.yml#/components/schemas/ErrorDescription'
     AuthenticationRequestDto:
-      $ref: './dm-dto.yml#/components/schemas/AuthenticationRequestDto'
+      type: object
+      description: 'Request for user auth'
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
     AccessDto:
-      $ref: './dm-dto.yml#/components/schemas/AccessDto'
+      type: object
+      description: 'Bearer token for work'
+      required:
+        - username
+        - token
+      properties:
+        username:
+          type: string
+        token:
+          type: string
+
+    ErrorDescription:
+      type: object
+      description: 'Error description'
+      properties:
+        field:
+          type: string
+        error:
+          type: string
+
+    ErrorResponse:
+      type: object
+      description: 'Error response'
+      properties:
+        message:
+          type: string
+
+    PhoneDto:
+      type: object
+      description: 'Phone number'
+      required:
+        - value
+      properties:
+        value:
+          type: string
+          minLength: 1
+        id:
+          type: integer
+          format: int64
+
+    ProfileDto:
+      type: object
+      description: 'User profile'
+      required:
+        - cash
+      properties:
+        cash:
+          type: number
+        id:
+          type: integer
+          format: int64
+
+    UserFullResponse:
+      type: object
+      description: 'Full user details'
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        age:
+          type: integer
+        email:
+          type: string
+        username:
+          type: string
+        phones:
+          type: array
+          items:
+            $ref: "#/components/schemas/PhoneDto"
+        profile:
+          $ref: "#/components/schemas/ProfileDto"
+
+    ValidationErrorResponse:
+      allOf:
+        - $ref: "#/components/schemas/ErrorResponse"
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                $ref: "#/components/schemas/ErrorDescription"
+
+    UserRequest:
+      type: object
+      description: 'Request for create new user'
+      required:
+        - name
+        - email
+        - username
+        - password
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        age:
+          type: integer
+          minimum: 12
+          maximum: 85
+        username:
+          type: string
+        password:
+          type: string
+        profile:
+          $ref: "#/components/schemas/ProfileDto"
+        phones:
+          type: array
+          items:
+            $ref: "#/components/schemas/PhoneDto"
+
     ChangeEmailRequest:
-      $ref: './dm-dto.yml#/components/schemas/ChangeEmailRequest'
+      type: object
+      description: 'Request for change user email'
+      required:
+        - email
+      properties:
+        email:
+          type: string
+
   securitySchemes:
     bearerAuth:
       type: http
