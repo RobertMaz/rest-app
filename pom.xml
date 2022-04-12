@@ -30,7 +30,7 @@
     <jsr305.version>3.0.2</jsr305.version>
     <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
     <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
-    <openapi-generator-maven-plugin.version>5.3.0</openapi-generator-maven-plugin.version>
+    <openapi-generator-maven-plugin.version>5.4.0</openapi-generator-maven-plugin.version>
     <java-jwt.version>3.18.1</java-jwt.version>
     <swagger-core-version>1.6.5</swagger-core-version>
     <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
@@ -159,11 +159,6 @@
     <!-- End Utility -->
 
     <!-- OpenApi -->
-    <dependency>
-      <groupId>org.openapitools</groupId>
-      <artifactId>jackson-databind-nullable</artifactId>
-      <version>${jackson-databind-nullable.version}</version>
-    </dependency>
     <!-- End OpenApi -->
 
     <!-- Test -->
