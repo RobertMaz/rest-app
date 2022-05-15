@@ -197,10 +197,8 @@
               <generateModels>true</generateModels>
               <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
               <configOptions>
-                <sourceFolder>src/main/java/</sourceFolder>
-                <delegatePattern>true</delegatePattern>
+                <interfaceOnly>true</interfaceOnly>
                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
-                <useBeanValidation>true</useBeanValidation>
                 <serializableModel>true</serializableModel>
               </configOptions>
             </configuration>

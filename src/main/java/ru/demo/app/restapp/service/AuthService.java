@@ -1,8 +1,5 @@
 package ru.demo.app.restapp.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +8,23 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import ru.demo.app.restapp.domain.Role;
 import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.security.jwt.JwtTokenProvider;
-import ru.demo.app.restapp.web.controller.AuthApiDelegate;
+import ru.demo.app.restapp.web.controller.AuthApi;
 import ru.demo.app.restapp.web.dto.AccessDto;
 import ru.demo.app.restapp.web.dto.AuthenticationRequestDto;
 import ru.demo.app.restapp.web.dto.UserRequest;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Slf4j
-@Component
+@Controller
 @RequiredArgsConstructor
-public class AuthService implements AuthApiDelegate {
+public class AuthService implements AuthApi {
 
   private final AuthenticationManager authenticationManager;
   private final JwtTokenProvider jwtTokenProvider;

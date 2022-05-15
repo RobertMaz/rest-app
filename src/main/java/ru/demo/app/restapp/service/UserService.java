@@ -6,12 +6,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.springframework.http.ResponseEntity;
 import ru.demo.app.restapp.domain.User;
-import ru.demo.app.restapp.web.controller.UsersApiDelegate;
+import ru.demo.app.restapp.web.controller.UsersApi;
 import ru.demo.app.restapp.web.dto.ChangeEmailRequest;
 import ru.demo.app.restapp.web.dto.UserFullResponse;
 import ru.demo.app.restapp.web.dto.UserRequest;
 
-public interface UserService extends UsersApiDelegate {
+public interface UserService extends UsersApi {
 
   @Nonnull
   ResponseEntity<UserFullResponse> findById(Long id);

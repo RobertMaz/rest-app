@@ -1,13 +1,5 @@
 package ru.demo.app.restapp.service;
 
-import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.demo.app.restapp.domain.Phone;
@@ -36,8 +28,17 @@ import ru.demo.app.restapp.web.dto.PhoneDto;
 import ru.demo.app.restapp.web.dto.UserFullResponse;
 import ru.demo.app.restapp.web.dto.UserRequest;
 
+import javax.annotation.Nonnull;
+import javax.persistence.EntityNotFoundException;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
+
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 

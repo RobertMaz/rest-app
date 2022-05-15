@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5999/postgres
     driver-class-name: org.postgresql.Driver
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
@@ -56,3 +56,5 @@ springdoc:
     enabled: false
   swagger-ui:
     url: /api-docs.yml
+server:
+  port: 8082
