@@ -191,15 +191,24 @@
             <configuration>
               <inputSpec>${project.basedir}/src/main/resources/static/api-docs.yml</inputSpec>
               <generateApis>true</generateApis>
+              <generateModels>true</generateModels>
               <generatorName>spring</generatorName>
               <apiPackage>ru.demo.app.restapp.web.controller</apiPackage>
               <modelPackage>ru.demo.app.restapp.web.dto</modelPackage>
-              <generateModels>true</generateModels>
               <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
               <configOptions>
+                <useTags>true</useTags>
+                <java8>false</java8>
+                <dateLibrary>java8</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                 <serializableModel>true</serializableModel>
+                <additionalModelTypeAnnotations>
+                  @lombok.AllArgsConstructor
+                  @lombok.Builder
+                  @lombok.NoArgsConstructor
+                </additionalModelTypeAnnotations>
+                <booleanGetterPrefix>is</booleanGetterPrefix>
               </configOptions>
             </configuration>
           </execution>

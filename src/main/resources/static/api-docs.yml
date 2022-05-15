@@ -5,9 +5,9 @@ info:
 servers:
   - url: http://localhost:8082
 tags:
-  - name: 'users-api-controller'
+  - name: 'users'
     description: 'Everything about users'
-  - name: 'auth-api-controller'
+  - name: 'auth'
     description: 'authentication'
 paths:
   /users:
@@ -17,7 +17,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - 'users-api-controller'
+        - 'users'
       parameters:
         - in: query
           name: age
@@ -71,7 +71,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - 'users-api-controller'
+        - 'users'
       requestBody:
         content:
           application/json:
@@ -93,7 +93,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - 'users-api-controller'
+        - 'users'
       requestBody:
         content:
           application/json:
@@ -121,7 +121,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - 'users-api-controller'
+        - 'users'
       parameters:
         - in: path
           name: id
@@ -150,7 +150,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - 'users-api-controller'
+        - 'users'
       parameters:
         - in: path
           name: id
@@ -169,7 +169,7 @@ paths:
       summary: 'User authentication'
       operationId: auth
       tags:
-        - 'auth-api-controller'
+        - 'auth'
       requestBody:
         content:
           application/json:
@@ -189,7 +189,7 @@ paths:
       summary: 'Creating new user'
       operationId: registerNewUser
       tags:
-        - 'auth-api-controller'
+        - 'auth'
       requestBody:
         content:
           application/json:

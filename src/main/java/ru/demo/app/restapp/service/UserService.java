@@ -1,15 +1,16 @@
 package ru.demo.app.restapp.service;
 
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.springframework.http.ResponseEntity;
 import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.web.controller.UsersApi;
 import ru.demo.app.restapp.web.dto.ChangeEmailRequest;
 import ru.demo.app.restapp.web.dto.UserFullResponse;
 import ru.demo.app.restapp.web.dto.UserRequest;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public interface UserService extends UsersApi {
 
