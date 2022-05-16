@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.demo.app.restapp.domain.User;
 import ru.demo.app.restapp.service.UserService;
@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.List;
 
 @Slf4j
-@Component
+@Controller
 @RequiredArgsConstructor
 public class UserController implements UsersApi {
     private final UserService userService;
