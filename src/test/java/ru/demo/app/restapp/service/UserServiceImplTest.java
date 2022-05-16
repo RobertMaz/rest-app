@@ -1,26 +1,5 @@
 package ru.demo.app.restapp.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ru.demo.app.restapp.util.UsersUtil.buildUser;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -30,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,6 +23,27 @@ import ru.demo.app.restapp.util.mapper.UserMapper;
 import ru.demo.app.restapp.web.dto.ChangeEmailRequest;
 import ru.demo.app.restapp.web.dto.UserFullResponse;
 import ru.demo.app.restapp.web.dto.UserRequest;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static ru.demo.app.restapp.util.UsersUtil.buildUser;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -76,9 +75,9 @@ class UserServiceImplTest {
     Long anyId = anyLong();
     when(userRepository.findById(anyId)).thenReturn(Optional.of(buildUser(anyId)));
 
-    ResponseEntity<UserFullResponse> user = userService.findById(anyId);
-    assertNotNull(user.getBody());
-    assertEquals(user.getBody().getId(), anyId);
+    UserFullResponse user = userService.findById(anyId);
+    assertNotNull(user);
+    assertEquals(user.getId(), anyId);
   }
 
   @Test
@@ -102,16 +101,13 @@ class UserServiceImplTest {
     request.setName("name");
     request.setPassword("pwd");
 
-    ResponseEntity<Void> created = userService.createUser(request);
+    User user = userService.createUser(request);
     //
     verify(phoneService, times(1)).saveAll(any(), eq(userReq));
     verify(profileService, times(1)).save(any(), eq(userReq));
     verify(userRepository, times(1)).save(userReq);
     //
-    URI location = created.getHeaders().getLocation();
-    assertNotNull(location);
-    String url = location.getScheme() + "://" + location.getHost() + "/" + id;
-    assertEquals(url, location.toString());
+    assertNotNull(user);
   }
 
   @Test
@@ -129,8 +125,7 @@ class UserServiceImplTest {
     ChangeEmailRequest request = new ChangeEmailRequest();
     request.setEmail(email);
 
-    ResponseEntity<UserFullResponse> updated = userService.updateUserEmail(request);
-    UserFullResponse userResponse = updated.getBody();
+    UserFullResponse userResponse = userService.updateUserEmail(request);
     //
     assertNotNull(userResponse);
     assertEquals(email, userResponse.getEmail());
@@ -163,12 +158,12 @@ class UserServiceImplTest {
 
     when(userRepository.findAll(any(Specification.class), any(PageRequest.class))).thenReturn(usersPage);
 
-    ResponseEntity<List<UserFullResponse>> foundPeople = userService.findAll(null, null, null, null, null, null);
-    assertNotNull(foundPeople.getBody());
-    assertEquals(COUNT, foundPeople.getBody().size());
+    List<UserFullResponse> foundPeople = userService.findAll(null, null, null, null, null, null);
+    assertNotNull(foundPeople);
+    assertEquals(COUNT, foundPeople.size());
 
     Set<Long> allPeopleIds = users.stream().map(User::getId).collect(Collectors.toSet());
-    Set<Long> foundIds = foundPeople.getBody().stream().map(UserFullResponse::getId).collect(Collectors.toSet());
+    Set<Long> foundIds = foundPeople.stream().map(UserFullResponse::getId).collect(Collectors.toSet());
     allPeopleIds.removeAll(foundIds);
     assertEquals(0, allPeopleIds.size());
   }

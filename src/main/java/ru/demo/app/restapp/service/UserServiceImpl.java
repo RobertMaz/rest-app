@@ -4,17 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.demo.app.restapp.domain.Phone;
 import ru.demo.app.restapp.domain.Profile;
 import ru.demo.app.restapp.domain.Role;
@@ -30,7 +27,6 @@ import ru.demo.app.restapp.web.dto.UserRequest;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +34,7 @@ import java.util.stream.Collectors;
 import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 
@@ -55,13 +51,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   @Nonnull
   @Override
   @Transactional(readOnly = true)
-  public ResponseEntity<UserFullResponse> findById(Long id) {
+  public UserFullResponse findById(Long id) {
     Optional<User> userOpt = userRepository.findById(id);
     log.info("Find user by id-{}", id);
-    UserFullResponse user = userOpt
+    return userOpt
         .map(USER_MAPPER::userToFullUserResponse)
         .orElseThrow(() -> new EntityNotFoundException(Utility.getMessage("User by id {1} not found.", id)));
-    return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
   /**
@@ -69,7 +64,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
    */
   @Override
   @Transactional
-  public ResponseEntity<Void> createUser(@Nonnull UserRequest request) {
+  public User createUser(@Nonnull UserRequest request) {
     log.info("Creating new user by username-{}", request.getUsername());
     User user = new User()
         .setName(request.getName())
@@ -86,8 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     user.setProfile(profile);
     user = userRepository.save(user);
     log.debug("User created: {}", user.getUsername());
-    final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
-    return ResponseEntity.created(uri).build();
+    return user;
   }
 
 
@@ -99,7 +93,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   @Nonnull
   @Override
   @Transactional
-  public ResponseEntity<UserFullResponse> updateUserEmail(@Nonnull ChangeEmailRequest request) {
+  public UserFullResponse updateUserEmail(@Nonnull ChangeEmailRequest request) {
     log.info("Update user-{}", request);
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username;
@@ -119,8 +113,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     user.setEmail(request.getEmail());
     user = userRepository.save(user);
     log.debug("User updated: {}", user);
-    UserFullResponse response = USER_MAPPER.userToFullUserResponse(user);
-    return new ResponseEntity<>(response, HttpStatus.OK);
+    return USER_MAPPER.userToFullUserResponse(user);
   }
 
   /**
@@ -128,16 +121,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
    */
   @Override
   @Transactional
-  public ResponseEntity<Void> deleteUser(Long id) {
+  public void deleteUser(Long id) {
     log.info("Delete user by id-{}", id);
 
     userRepository.deleteById(id);
     log.debug("User deleted by id: {}", id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @Override
-  public ResponseEntity<List<UserFullResponse>> findAll(Integer age, String phone, String name, String email,
+  public List<UserFullResponse> findAll(Integer age, String phone, String name, String email,
       Integer page, Integer size) {
     log.info("FindAll users by age-{}, phone-{}, name-{}, email-{}, page-{}, size-{}", age, phone, name, email, page,
              size);
@@ -165,7 +157,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         .map(USER_MAPPER::userToFullUserResponse)
         .collect(Collectors.toList());
     log.debug("Found users: {}", foundUsers);
-    return new ResponseEntity<>(foundUsers, HttpStatus.OK);
+    return foundUsers;
   }
 
   public Optional<User> findByName(String userName) {
